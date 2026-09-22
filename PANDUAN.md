@@ -2,8 +2,9 @@
 
 Proyek ini berisi:
 - **Halaman formulir** (HTML) yang bisa diisi + tanda tangan digital (mouse/touch).
-- **Backend PHP** untuk menyimpan data & tanda tangan ke **MySQL**.
-- **Halaman admin** untuk melihat rekap, detail, export CSV, dan mengubah status.
+- **Backend PHP** untuk menyimpan data & tanda tangan ke **MySQL** (untuk XAMPP/lokal).
+- **API Node.js** untuk menyimpan data ke **Neon PostgreSQL** (untuk Vercel/online).
+- **Halaman admin** untuk melihat rekap, detail, export CSV, dan mengubah status (dua versi).
 
 ---
 
@@ -11,25 +12,105 @@ Proyek ini berisi:
 
 ```
 sikonkep/
-├── formulir-daftar-kepentingan-pribadi.html   ← halaman pengisian (untuk pegawai)
-└── backend/
-    ├── config.php        ← GANTI kredensial database & password admin DI SINI
-    ├── db.php            ← koneksi PDO (tidak perlu diubah)
-    ├── auth.php          ← sesi login, CSRF, anti brute-force (tidak perlu diubah)
-    ├── simpan.php        ← endpoint penerima data (tidak perlu diubah)
-    ├── schema.sql        ← script pembuatan database & tabel
-    ├── tools/
-    │   └── hash_pass.php ← alat membuat hash password admin
+├── formulir-daftar-kepentingan-pribadi.html   ← halaman pengisian (untuk pegawai) - otomatis pilih endpoint
+├── login.html                                ← login admin ONLINE (Vercel + Neon, JWT)
+├── admin.html                                ← dashboard admin ONLINE (Vercel + Neon)
+├── api/
+│   ├── _lib.js      ← helper Neon + JWT + CORS
+│   ├── simpan.js    ← POST /api/simpan  (Neon)
+│   └── admin.js     ← /api/admin?action=login|list|get|status|export (Neon)
+├── neon-schema.sql                           ← skema PostgreSQL untuk Neon
+├── vercel.json      ← konfigurasi deploy Vercel
+├── package.json     ← dependensi Vercel Functions (pg)
+├── .env.example     ← contoh environment variables
+│
+└── backend/         ← versi XAMPP / PHP + MySQL (tetap berfungsi lokal)
+    ├── config.php
+    ├── db.php
+    ├── auth.php
+    ├── simpan.php
+    ├── schema.sql
+    ├── tools/hash_pass.php
     └── admin/
-        ├── login.php     ← halaman login admin (USAHAKAN login dulu)
-        ├── logout.php    ← keluar dari sesi admin
-        ├── index.php     ← daftar isian + export CSV (untuk admin/verifikator)
-        └── detail.php    ← detail isian + ubah status
+        ├── login.php
+        ├── logout.php
+        ├── index.php
+        └── detail.php
 ```
+
+> **Catatan:** `formulir-daftar-kepentingan-pribadi.html` cerdas — bila dibuka di `localhost` ia kirim ke `backend/simpan.php` (MySQL), bila di Vercel (`*.vercel.app`) ia kirim ke `/api/simpan` (Neon). Fallback otomatis bila salah satu 404.
 
 ---
 
-## Langkah Pemasangan di XAMPP (paling umum)
+## OPSI A — Deploy Online ke Vercel + Neon (disarankan)
+
+### A1. Buat database di Neon (gratis)
+
+1. Buka **https://neon.tech** → Sign up (bisa pakai GitHub/Google) → **Create Project**.
+2. Pilih region **Singapore** (paling dekat ke Indonesia) → buat project (mis. `sikonkep`).
+3. Di dashboard Neon → **Connection string** → pilih **Pooled** → copy string yang terlihat seperti:
+   ```
+   postgresql://user:password@ep-xxx.neon.tech/neondb?sslmode=require
+   ```
+   Simpan sebagai `DATABASE_URL`.
+4. Buka **SQL Editor** di Neon → klik **New Query** → tempel seluruh isi file `neon-schema.sql` → **Run**.
+   - Harus muncul `CREATE TABLE` sukses. Cek di **Tables** → `pengisian` sudah ada.
+   - Alternatif via CLI: `psql "$DATABASE_URL" -f neon-schema.sql`
+
+### A2. Siapkan kredensial admin online
+
+Tentukan 3 nilai ini (jangan pakai spasi, catat baik-baik):
+
+- `ADMIN_USER` — mis. `admin` atau `kominfo`
+- `ADMIN_PASS` — password kuat, boleh teks biasa atau hash bcrypt (`$2y$...`). Untuk hash bcrypt: `php backend/tools/hash_pass.php "password-anda"` atau `node -e "console.log(require('bcryptjs').hashSync('pass',10))"`
+- `ADMIN_SECRET` — string acak panjang **minimal 32 karakter** untuk tanda tangan JWT. Generate:
+  ```
+  node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+  # atau
+  openssl rand -hex 32
+  ```
+
+Contoh `.env` (jangan commit file `.env` asli):
+```
+DATABASE_URL=postgresql://...
+ADMIN_USER=admin
+ADMIN_PASS=GantiPasswordKuat123!
+ADMIN_SECRET=a3f8c9d2e1b4...32hex...
+```
+
+### A3. Import repo ke Vercel
+
+1. Buka **https://vercel.com** → Sign up (pakai GitHub) → **Add New → Project** → **Import** repo `sayaahmaddi-lab/sikonkep`.
+2. Vercel otomatis deteksi **Framework: Other** (karena static + Functions) → biarkan default.
+3. Buka **Settings → Environment Variables** → tambah 4 variabel satu per satu (Environment: **Production** + **Preview**):
+   - `DATABASE_URL`
+   - `ADMIN_USER`
+   - `ADMIN_PASS`
+   - `ADMIN_SECRET`
+4. Klik **Deploy** → tunggu ±1 menit hingga muncul **Congratulations**.
+5. Buka URL yang diberikan Vercel, mis. `https://sikonkep-xxx.vercel.app`:
+   - Formulir: `.../formulir-daftar-kepentingan-pribadi.html`
+   - Login admin: `.../login.html` (atau `.../login`) → masuk dengan `ADMIN_USER`/`ADMIN_PASS` → otomatis ke `.../admin.html`
+   - Cek `.../api/admin?action=list` harus minta token (401 bila tanpa login — tanda aman).
+
+### A4. Uji alur online
+
+1. Buka formulir → isi Nama, NIP, beberapa tabel A–D, jawab E/F, gambar tanda tangan → **Simpan ke Database** → harus muncul "Tersimpan ke database (ID #...)".
+2. Buka `login.html` → login → dashboard `admin.html` → data baru harus muncul → klik **Lihat** → ubah **Status** → **Simpan Status** → cek export CSV.
+
+### A5. Troubleshooting Vercel + Neon
+
+| Gejala | Solusi |
+|---|---|
+| `DATABASE_URL belum diatur` | Cek Vercel → Settings → Env Vars, pastikan `DATABASE_URL` ada di **Production**, lalu **Redeploy** (Deployments → ⋯ → Redeploy). |
+| `Gagal menyimpan: ... self-signed certificate` | Pastikan `DATABASE_URL` pakai `?sslmode=require` dan `api/_lib.js` sudah `ssl:{rejectUnauthorized:false}` (sudah). |
+| `401 Belum login` terus | Token kadaluarsa (8 jam) → login ulang di `login.html`. Pastikan `ADMIN_SECRET` sama saat login dan saat verifikasi (jangan ganti di tengah sesi tanpa redeploy). |
+| `404 /api/simpan` | Pastikan `vercel.json` ada dan `api/simpan.js` ada. Cek tab **Functions** di dashboard Vercel. |
+| Tanda tangan kosong di admin | Pastikan menggambar dulu sebelum klik Simpan, dan payload `ttd` <5 MB. |
+
+---
+
+## OPSI B — Pemasangan di XAMPP (lokal / intranet kantor)
 
 ### 1. Siapkan web server + MySQL
 - Pasang **XAMPP** (atau Laragon/WAMP) di komputer/server kantor.
@@ -80,40 +161,56 @@ sikonkep/
 
 ## Pengamanan Halaman Admin
 
-Halaman `backend/admin/` kini **wajib login**:
-
+### Versi XAMPP (PHP)
 - **Login**: kunjungi `backend/admin/login.php` atau langsung buka `backend/admin/`.
   Masukkan `ADMIN_USER` dan `ADMIN_PASS` yang diatur di `config.php`.
 - **Logout**: klik tombol **"Keluar"** di pojok kanan atas, atau buka `backend/admin/logout.php`.
 - **Sesi login** berlaku maksimal **8 jam** (bisa diubah lewat `ADMIN_SESSION_LIFETIME`).
 - **Anti brute-force**: setelah **5× gagal login** (bisa diubah lewat `ADMIN_MAX_ATTEMPTS`),
   IP akan diblokir sementara selama ±1 menit.
-- **CSRF token**: semua form POST (login & ubah status) memakai token acak untuk
-  mencegah serangan CSRF.
-- **Header keamanan**: `X-Frame-Options` (anti clickjacking), `X-Content-Type-Options`
-  (anti MIME sniffing), dan `Referrer-Policy` otomatis terpasang.
-- Cookie sesi ber-`HttpOnly` + `SameSite=Lax`, serta sesi diregenerasi berkala
-  (anti session fixation).
+- **CSRF token**: semua form POST (login & ubah status) memakai token acak
+- **Header keamanan**: `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`
+- Cookie `HttpOnly` + `SameSite=Lax`, sesi diregenerasi berkala.
 
-> Untuk lingkungan produksi resmi, sebaiknya integrasikan dengan SSO/portal
-> kepegawaian daerah atau tambahkan HTTPS.
+### Versi Vercel (Node + JWT)
+- Login via `login.html` → `POST /api/admin?action=login` → mengembalikan **JWT** (8 jam).
+- Semua endpoint admin (`list`, `get`, `status`, `export`) wajib header `Authorization: Bearer <token>`.
+- Token ditandatangani dengan `ADMIN_SECRET` (HS256) — ganti secara berkala dan redeploy.
+- Tanpa token valid → `401 Belum login`.
+- Admin online dan admin XAMPP saling independen (kredensial diatur terpisah).
 
 ---
 
 ## Cara Kerja Aliran Data
 
+### Online (Vercel + Neon)
 ```
 Browser (formulir + tanda tangan digital)
-        │ 1. Klik "Simpan ke Database"
-        │    → kirim JSON via fetch() ke backend/simpan.php
+        │ 1. Klik "Simpan ke Database" (di https://xxx.vercel.app)
+        │    → fetch POST /api/simpan (JSON)
+        ▼
+api/simpan.js (Node.js + pg)
+        │ 2. Validasi, INSERT ke Neon PostgreSQL → RETURNING id
+        ▼
+Neon: database → tabel pengisian
+        ▲
+        │ 3. Admin buka /login.html → /admin.html
+        │    → fetch /api/admin?action=list (Bearer JWT)
+api/admin.js  → query SELECT * FROM pengisian
+```
+
+### Lokal (XAMPP + MySQL)
+```
+Browser (formulir + tanda tangan digital)
+        │ 1. Klik "Simpan ke Database" (di http://localhost/...)
+        │    → fetch POST backend/simpan.php
         ▼
 backend/simpan.php (PHP + PDO)
-        │ 2. Validasi, lalu INSERT ke tabel `pengisian`
+        │ 2. Validasi, INSERT ke MySQL
         ▼
-MySQL: database `sikonkep` → tabel `pengisian`
+MySQL: database sikonkep → tabel pengisian
         ▲
-        │ 3. Admin buka backend/admin/ untuk melihat/export/menindaklanjuti
-backend/admin/index.php & detail.php
+backend/admin/index.php & detail.php (PHP sesi)
 ```
 
 ---
@@ -122,22 +219,17 @@ backend/admin/index.php & detail.php
 
 ### Tanda tangan
 - Tanda tangan digambar di atas **canvas**, lalu dikirim sebagai **gambar PNG (base64)**
-  dan disimpan di kolom `ttd` (tipe `LONGTEXT`). Data dikonversi saat dikirim
-  (`canvas.toDataURL('image/png')`).
-- Maksimal ukuran tanda tangan yang diterima: **5 MB** (diatur di `simpan.php`).
+  dan disimpan di kolom `ttd` (TEXT/LONGTEXT). `canvas.toDataURL('image/png')`.
+- Maksimal ukuran tanda tangan yang diterima: **5 MB** (diatur di `simpan.php` & `api/simpan.js`).
 
 ### Keamanan
-- Semua query memakai **PDO prepared statements** → aman dari SQL injection.
+- Semua query memakai **prepared statements** (PDO di PHP, `pg` parameterised di Node) → aman dari SQL injection.
 - Nama/no input disaring & dibatasi panjangnya.
-- Jika perlu proteksi halaman admin, aktifkan password sederhana dengan
-  mengisi `ADMIN_PASS` di `config.php` lalu tambahkan cek sesi sederhana.
-  (Untuk produksi resmi, sebaiknya gunakan autentikasi SSO/portal kepegawaian.)
+- Untuk produksi resmi, integrasikan dengan SSO/portal kepegawaian daerah & pakai HTTPS (Vercel sudah HTTPS otomatis).
 
 ### Kredensial
-- Jangan berikan akses MySQL ke publik. Pastikan file `config.php` tidak
-  diakses langsung lewat browser — di XAMPP `define()` tidak menampilkan apa pun,
-  tetapi untuk produksi gunakan server dengan konfigurasi `open_basedir`
-  atau letakkan `config.php` 1 tingkat di atas `htdocs`.
+- Jangan commit file `.env` ke Git. Gunakan `.env.example` sebagai template.
+- `backend/config.php` jangan diakses publik — di Vercel file `backend/` tidak terekspos sebagai endpoint (hanya `api/`).
 
 ---
 
@@ -145,8 +237,9 @@ backend/admin/index.php & detail.php
 
 | Gejala | Penyebab / Solusi |
 |---|---|
-| Tombol "Simpan ke Database" muncul "Tidak dapat terhubung ke server" | Backend belum aktif: pastikan folder disalin ke `htdocs` dan Apache/MySQL berjalan. |
-| Muncul "Gagal terhubung ke database" | Cek `backend/config.php` (host, nama db, user, password) & pastikan database sudah dibuat lewat `schema.sql`. |
+| Tombol "Simpan ke Database" muncul "Tidak dapat terhubung ke server" | Backend belum aktif: pastikan folder disalin ke `htdocs` dan Apache/MySQL berjalan (lokal), atau cek Functions di Vercel (online). |
+| Muncul "Gagal terhubung ke database" | Cek `backend/config.php` (lokal) atau `DATABASE_URL` di Vercel → Env Vars. Pastikan database sudah dibuat (`schema.sql` atau `neon-schema.sql`). |
 | Muncul "Kolom wajib belum diisi: nama, nip" | Nama & NIP harus diisi di bagian identitas formulir. |
 | Data masuk tapi tanda tangan kosong | Tanda tangan belum digambar. Gambar dulu di pad sebelum klik simpan. |
 | Huruf berantakan di CSV | Sudah diberi BOM UTF-8; buka CSV dengan Excel lalu pilih import UTF-8. |
+| `401` di admin.html | Sesi habis — login ulang di `login.html`. Cek `ADMIN_SECRET` konsisten. |
