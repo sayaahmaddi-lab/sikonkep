@@ -99,7 +99,7 @@ ADMIN_SECRET=a3f8c9d2e1b4...32hex...
 ### A4. Uji alur online
 
 1. Buka formulir → isi Nama, NIP, beberapa tabel A–D, jawab E/F, gambar tanda tangan → **Simpan ke Database** → harus muncul "Tersimpan ke database (ID #...)".
-2. Buka `login.html` → login → dashboard `admin.html` → data baru harus muncul → klik **Lihat** → ubah **Status** → **Simpan Status** → cek export CSV.
+2. Buka `login.html` → login → dashboard `admin.html` → data baru harus muncul → klik **📄 Lihat** → terbuka **lembar formulir persis seperti aslinya** di tab baru (read-only, lengkap dengan tanda tangan, ada tombol Cetak/PDF) → kembali ke admin → klik **⚙ Status** → ubah status → **Simpan Status** → cek export CSV.
 
 ### A5. Troubleshooting Vercel + Neon
 

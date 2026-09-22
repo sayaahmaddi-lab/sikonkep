@@ -11,7 +11,7 @@ Konflik Kepentingan) secara digital, lengkap dengan **tanda tangan digital**
 - Simpan otomatis di browser (localStorage) agar isian tidak hilang.
 - Cetak / Simpan PDF dengan tata letak rapi ukuran A4.
 - Simpan ke database (Neon PostgreSQL bila online, MySQL bila XAMPP) via tombol "Simpan ke Database".
-- Halaman admin: rekap data, detail isian, ubah status, export CSV — **wajib login**.
+- Halaman admin: rekap data, **lembar isian persis formulir aslinya** (read-only, lengkap tanda tangan, siap cetak/PDF), ubah status & catatan, export CSV — **wajib login**.
 - **Dua mode deployment** dalam satu repo:
   - **Lokal (XAMPP)**: `backend/` (PHP + MySQL)
   - **Online (Vercel + Neon)**: `api/` (Node.js) + `neon-schema.sql` + `login.html`/`admin.html`
