@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulir Daftar Kepentingan Pribadi</title>
+<style>
+  :root {
+    --garis: #333;
+    --tipis: #999;
+    --abu: #eef1f5;
+    --biru: #1f3a5f;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { margin: 0; padding: 0; }
+
+  body {
+    background: #e3e7ed;
+    font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+    color: #111;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ============================= TOOLBAR (layar saja) ============================= */
+  .toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 10px 16px;
+    background: #0f2438;
+    color: #fff;
+    box-shadow: 0 1px 6px rgba(0,0,0,.25);
+  }
+  .toolbar .brand { font-weight: 600; margin-right: auto; font-size: 14px; }
+  .toolbar button {
+    border: 1px solid rgba(255,255,255,.35);
+    background: #1c3a57;
+    color: #fff;
+    padding: 7px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .toolbar button:hover { background: #2a4e73; }
+  .toolbar button.utama { background: #1c7c3c; border-color: #1c7c3c; }
+  .toolbar button.utama:hover { background: #229049; }
+  .toolbar .hint { font-size: 11px; color: #bcd0e6; width: 100%; margin: 2px 0 0; }
+
+  /* ============================= HALAMAN / KERTAS ============================= */
+  .page {
+    max-width: 210mm;
+    margin: 18px auto 40px;
+    background: #fff;
+    padding: 14mm 14mm 16mm;
+    box-shadow: 0 2px 14px rgba(0,0,0,.18);
+  }
+
+  /* ---------- KOP ---------- */
+  .kop { display: flex; align-items: center; gap: 14px; border-bottom: 3px double var(--garis); padding-bottom: 10px; }
+  .kop .logo {
+    flex: 0 0 auto;
+    width: 62px; height: 62px;
+    border: 1px dashed #b9b9b9;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+    font-size: 9px;
+    color: #b9b9b9;
+    line-height: 1.3;
+  }
+  .kop .teks { flex: 1 1 auto; text-align: center; }
+  .kop .pemkot {
+    font-size: 15px; letter-spacing: 1px; margin: 0;
+    font-weight: 700; text-transform: uppercase;
+  }
+  .kop .instansi {
+    font-size: 19px; margin: 2px 0 0; font-weight: 700; text-transform: uppercase;
+  }
+  .kop .alamat {
+    font-size: 10.5px; margin: 3px 0 0; color: #333;
+  }
+
+  /* ---------- Judul ---------- */
+  .judul {
+    text-align: center;
+    margin: 14px 0 4px;
+  }
+  .judul h1 {
+    font-size: 16px;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    text-decoration: underline;
+  }
+
+  /* ---------- Identitas ---------- */
+  .identitas {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px 34px;
+    margin: 14px 0 6px;
+  }
+  .kolom {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    min-width: 0;
+  }
+  .kolom .lbl {
+    white-space: nowrap;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .kolom .titik { white-space: nowrap; }
+  .kolom .isi {
+    flex: 1 1 auto;
+    min-width: 0;
+    border-bottom: 1px dotted var(--garis);
+  }
+  .kolom input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    font: inherit;
+    padding: 1px 2px;
+  }
+
+  /* ---------- Bagian A - F ---------- */
+  .bagian { margin-top: 16px; }
+  .bagian > h2 {
+    font-size: 14px;
+    margin: 0 0 2px;
+    text-transform: uppercase;
+  }
+  .bagian .keterangan {
+    margin: 0 0 8px;
+    font-size: 12px;
+    color: #333;
+    font-style: italic;
+    line-height: 1.45;
+  }
+
+  /* ---------- Tabel ---------- */
+  .tabel-wrap { overflow-x: auto; }
+  table.tabel {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 12px;
+  }
+  table.tabel th, table.tabel td {
+    border: 1px solid var(--garis);
+    padding: 3px 4px;
+    vertical-align: top;
+    word-wrap: break-word;
+  }
+  table.tabel thead th {
+    background: var(--abu);
+    font-size: 11.5px;
+    font-weight: 700;
+    text-align: center;
+  }
+  table.tabel td.no { text-align: center; width: 26px; font-weight: 600; vertical-align: middle; }
+  table.tabel td.isi-kolom { padding: 0; }
+  textarea.sel {
+    display: block;
+    width: 100%;
+    border: none;
+    outline: none;
+    resize: none;
+    overflow: hidden;
+    background: transparent;
+    font: inherit;
+    padding: 3px 5px;
+    min-height: 40px;
+    line-height: 1.45;
+  }
+  textarea.sel:focus { background: #f6f9ff; }
+
+  /* ---------- Bagian E & F (pertanyaan ya/tidak) ---------- */
+  .pertanyaan {
+    margin: 12px 0;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .pertanyaan .nomer { font-weight: 700; }
+  .pilihan { display: inline-flex; gap: 16px; margin-left: 8px; font-weight: 600; }
+  .pilihan label { cursor: pointer; }
+  .pilihan input { margin-right: 3px; vertical-align: -2px; }
+  .sub {
+    margin: 6px 0 4px 26px;
+    padding-left: 12px;
+    border-left: 2px solid #c7d2de;
+    font-size: 12.5px;
+  }
+  .baris-titik { display: flex; align-items: baseline; gap: 6px; margin: 4px 0; }
+  .baris-titik .lbl { white-space: nowrap; font-weight: 600; }
+  .baris-titik .isi { flex: 1 1 auto; min-width: 0; border-bottom: 1px dotted var(--garis); }
+  .baris-titik input {
+    width: 100%; border: none; outline: none; background: transparent; font: inherit; padding: 1px 2px;
+  }
+  .sub-huruf { font-weight: 700; margin-top: 10px; }
+
+  /* ---------- Pernyataan & tanda tangan ---------- */
+  .pernyataan { margin-top: 18px; font-size: 13px; line-height: 1.65; }
+  .pernyataan ol { margin: 0 0 0 20px; padding: 0; }
+  .ttd {
+    margin-top: 18px;
+    text-align: right;
+    font-size: 13px;
+  }
+  .ttd .spasi { height: 8px; }
+  .ttd .nama-nip input {
+    text-align: center;
+    border: none;
+    border-bottom: 1px solid var(--garis);
+    outline: none;
+    background: transparent;
+    font: inherit;
+    width: 240px;
+    margin-top: 4px;
+    padding: 1px 2px;
+  }
+  .ttd .nama-nip input:first-child { font-weight: 600; }
+
+  /* ---------- Pad tanda tangan ---------- */
+  .ttd-pad-wrap {
+    text-align: center;
+  }
+  canvas#ttdCanvas {
+    display: block;
+    margin: 0 auto 2px;
+    border: 1px solid var(--garis);
+    border-radius: 6px;
+    background: #fff;
+    cursor: crosshair;
+    touch-action: none;
+  }
+  .ttd-pad-hint { font-size: 10.5px; color: #888; margin: 0 0 3px; }
+  .ttd-tools { display: flex; justify-content: center; gap: 8px; margin-bottom: 2px; }
+  .ttd-tools button {
+    border: 1px solid #9aa7b6;
+    background: #f4f6f8;
+    color: #222;
+    font: inherit;
+    font-size: 12px;
+    padding: 3px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .ttd-tools button:hover { background: #e6ebf0; }
+  .ttd-tools button:disabled { opacity: .45; cursor: default; }
+  @media print {
+    .ttd-pad-wrap { text-align: center; }
+    .ttd-pad-hint, .ttd-tools { display: none !important; }
+    canvas#ttdCanvas { border: none; border-radius: 0; }
+  }
+
+  .footer-note { margin-top: 20px; font-size: 10px; color: #666; text-align: center; }
+
+  /* ============================= CETAK ============================= */
+  @page { size: A4 portrait; margin: 12mm; }
+  @media print {
+    body { background: #fff; }
+    .toolbar { display: none !important; }
+    .page { margin: 0; padding: 0; box-shadow: none; max-width: none; }
+    input, textarea.sel { padding: 1px 2px; }
+    textarea.sel:focus { background: transparent; }
+    .kop .logo { border-color: #999; color: #999; }
+    .bagian, .pernyataan, .ttd { page-break-inside: avoid; }
+    table.tabel thead { display: table-header-group; }
+  }
+
+  /* Toast */
+  #toast {
+    position: fixed; bottom: 18px; left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #0f2438; color: #fff; padding: 9px 18px;
+    border-radius: 6px; font-size: 13px; opacity: 0;
+    pointer-events: none; transition: .25s; z-index: 99;
+  }
+  #toast.tampil { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- ================= TOOLBAR (tidak ikut tercetak) ================= -->
+<div class="toolbar">
+  <span class="brand">Formulir Daftar Kepentingan Pribadi</span>
+  <button type="button" onclick="simpan()">💾 Simpan di Browser</button>
+  <button type="button" id="btnKirim" class="utama" onclick="kirimKeServer()">☁️ Simpan ke Database</button>
+  <button type="button" onclick="window.print()">🖨️ Cetak / Simpan PDF</button>
+  <button type="button" onclick="bersihkan()">🗑️ Kosongkan</button>
+  <p class="hint">Isian otomatis tersimpan di browser ini. Untuk PDF: klik "Cetak / Simpan PDF", lalu pilih "Save as PDF". Tombol "Simpan ke Database" mengirim data + tanda tangan ke server MySQL.</p>
+</div>
+
+<div class="page">
+
+  <!-- KOP -->
+  <header class="kop">
+    <div class="logo">LOGO<br>Instansi</div>
+    <div class="teks">
+      <p class="pemkot">Pemerintah Kabupaten Aceh Tengah</p>
+      <p class="instansi">Dinas Komunikasi dan Informatika</p>
+      <p class="alamat">Alamat : ……………………………………… &nbsp;|&nbsp; Telepon : ……………… &nbsp;|&nbsp; E-mail : ………………</p>
+    </div>
+  </header>
+
+  <!-- JUDUL -->
+  <div class="judul">
+    <h1>Formulir Daftar Kepentingan Pribadi</h1>
+  </div>
+
+  <!-- IDENTITAS -->
+  <div class="identitas">
+    <div class="kolom"><span class="lbl">Nama</span><span class="titik">:</span><span class="isi"><input type="text" data-key="nama" placeholder="…"></span></div>
+    <div class="kolom"><span class="lbl">NIP</span><span class="titik">:</span><span class="isi"><input type="text" data-key="nip" placeholder="…"></span></div>
+    <div class="kolom"><span class="lbl">Pangkat/Golongan</span><span class="titik">:</span><span class="isi"><input type="text" data-key="pangkat" placeholder="…"></span></div>
+    <div class="kolom"><span class="lbl">Jabatan</span><span class="titik">:</span><span class="isi"><input type="text" data-key="jabatan" placeholder="…"></span></div>
+    <div class="kolom"><span class="lbl">Perangkat Daerah</span><span class="titik">:</span><span class="isi"><input type="text" data-key="perangkat" placeholder="…"></span></div>
+    <div class="kolom"><span class="lbl">Unit Kerja</span><span class="titik">:</span><span class="isi"><input type="text" data-key="unit" placeholder="…"></span></div>
+    <div class="kolom"><span class="lbl">Tanggal Pengisian</span><span class="titik">:</span><span class="isi"><input type="text" data-key="tanggal" placeholder="…………-…………-…………"></span></div>
+  </div>
+
+  <!-- ============================= A ============================= -->
+  <section class="bagian">
+    <h2>A. Hubungan Keluarga dan Kerabat</h2>
+    <p class="keterangan">Tuliskan daftar keluarga dan kerabat yang berpotensi menimbulkan kondisi Konflik Kepentingan berkaitan dengan tugas pokok, fungsi atau kewenangan yang Anda miliki.</p>
+    <div class="tabel-wrap">
+      <table class="tabel" id="tA">
+        <thead>
+          <tr>
+            <th class="no-col">No.</th>
+            <th>Nama</th>
+            <th>Hubungan</th>
+            <th>Pekerjaan/Jabatan dan Instansi/Perangkat Daerah/Institusinya</th>
+            <th>Situasi yang dapat menimbulkan Konflik Kepentingan</th>
+          </tr>
+        </thead>
+        <tbody data-cols="4" data-prefix="a"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============================= B ============================= -->
+  <section class="bagian">
+    <h2>B. Hubungan Bisnis dan Finansial</h2>
+    <p class="keterangan">Tuliskan daftar kepemilikan saham dan/atau kepemilikan manfaat serta investasi dalam bentuk lainnya yang berpotensi menimbulkan kondisi Konflik Kepentingan berkaitan dengan tugas pokok, fungsi atau kewenangan yang Anda miliki.</p>
+    <div class="tabel-wrap">
+      <table class="tabel" id="tB">
+        <thead>
+          <tr>
+            <th class="no-col">No.</th>
+            <th>Bentuk Kepemilikan</th>
+            <th>Nilai / Prosentase</th>
+            <th>Nama Badan Usaha / Lokasi Aset</th>
+            <th>Situasi yang dapat menimbulkan Konflik Kepentingan</th>
+          </tr>
+        </thead>
+        <tbody data-cols="4" data-prefix="b"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============================= C ============================= -->
+  <section class="bagian">
+    <h2>C. Pekerjaan Lain Di Luar Pekerjaan Pokok</h2>
+    <p class="keterangan">Tuliskan pekerjaan lain di luar pekerjaan pokok atau pekerjaan lain yang dilakukan yang berpotensi menimbulkan kondisi Konflik Kepentingan berkaitan dengan tugas pokok, fungsi atau kewenangan yang Anda miliki.</p>
+    <div class="tabel-wrap">
+      <table class="tabel" id="tC">
+        <thead>
+          <tr>
+            <th class="no-col">No.</th>
+            <th>Bentuk Pekerjaan</th>
+            <th>Jabatan / Fungsi</th>
+            <th>Nama Perusahaan/Institusi</th>
+            <th>Situasi yang dapat menimbulkan Konflik Kepentingan</th>
+          </tr>
+        </thead>
+        <tbody data-cols="4" data-prefix="c"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============================= D ============================= -->
+  <section class="bagian">
+    <h2>D. Jabatan Publik Lain yang Diemban (Rangkap Jabatan)</h2>
+    <p class="keterangan">Tuliskan jabatan publik lain yang sedang diemban.</p>
+    <div class="tabel-wrap">
+      <table class="tabel" id="tD">
+        <thead>
+          <tr>
+            <th class="no-col">No.</th>
+            <th>Jabatan</th>
+            <th>Perangkat Daerah / Unit Kerja / Institusi</th>
+            <th>Situasi yang dapat menimbulkan Konflik Kepentingan</th>
+          </tr>
+        </thead>
+        <tbody data-cols="3" data-prefix="d"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============================= E ============================= -->
+  <section class="bagian">
+    <h2>E. Hubungan atau Afiliasi Lainnya</h2>
+
+    <div class="pertanyaan">
+      <span class="nomer">1.</span>
+      Apakah Anda terlibat secara aktif dalam keanggotaan organisasi masyarakat, organisasi keagamaan, organisasi nirlaba, lembaga swadaya masyarakat, perkumpulan, yayasan atau organisasi sejenisnya?
+      <span class="pilihan">
+        <label><input type="radio" name="e1" data-key="e1_ya"> Ya</label>
+        <label><input type="radio" name="e1" data-key="e1_tidak"> Tidak</label>
+      </span>
+      <div class="sub">
+        <div class="baris-titik"><span class="lbl">Nama Organisasi</span><span>:</span><span class="isi"><input type="text" data-key="e1_nama"></span></div>
+        <div class="baris-titik"><span class="lbl">Posisi / Jabatan</span><span>:</span><span class="isi"><input type="text" data-key="e1_posisi"></span></div>
+      </div>
+    </div>
+
+    <div class="pertanyaan">
+      <span class="nomer">2.</span>
+      Apakah Anda terlibat secara aktif dalam keanggotaan organisasi profesi, organisasi ikatan alumni, organisasi/klub olahraga, remaja hobi atau organisasi sejenisnya?
+      <span class="pilihan">
+        <label><input type="radio" name="e2" data-key="e2_ya"> Ya</label>
+        <label><input type="radio" name="e2" data-key="e2_tidak"> Tidak</label>
+      </span>
+      <div class="sub">
+        <div class="baris-titik"><span class="lbl">Nama Organisasi</span><span>:</span><span class="isi"><input type="text" data-key="e2_nama"></span></div>
+        <div class="baris-titik"><span class="lbl">Posisi / Jabatan</span><span>:</span><span class="isi"><input type="text" data-key="e2_posisi"></span></div>
+      </div>
+    </div>
+
+    <div class="pertanyaan">
+      <span class="nomer">3.</span>
+      Apakah Anda memiliki hubungan afiliasi tertentu dengan partai politik, sekolah/perguruan tinggi, lembaga penelitian atau instansi pemerintah lainnya yang berkaitan yang berpotensi menimbulkan kondisi Konflik Kepentingan berkaitan dengan tugas pokok, fungsi atau kewenangan yang Anda miliki?
+      <span class="pilihan">
+        <label><input type="radio" name="e3" data-key="e3_ya"> Ya</label>
+        <label><input type="radio" name="e3" data-key="e3_tidak"> Tidak</label>
+      </span>
+      <div class="sub">
+        <div class="baris-titik"><span class="lbl">Nama Institusi</span><span>:</span><span class="isi"><input type="text" data-key="e3_institusi"></span></div>
+        <div class="baris-titik"><span class="lbl">Situasi yang dapat menimbulkan Konflik Kepentingan</span><span>:</span><span class="isi"><input type="text" data-key="e3_situasi"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= F ============================= -->
+  <section class="bagian">
+    <h2>F. Rencana Pasca Pensiun atau Pengunduran Diri</h2>
+
+    <div class="pertanyaan">
+      Apakah Anda sudah memiliki rencana kerja pasca pensiun atau pasca mengundurkan diri dari pejabat publik yang terkait dengan tugas pokok, fungsi atau kewenangan yang Anda miliki?
+      <span class="pilihan">
+        <label><input type="radio" name="f1" data-key="f1_ya"> Ya</label>
+        <label><input type="radio" name="f1" data-key="f1_tidak"> Tidak</label>
+      </span>
+    </div>
+
+    <div class="sub">
+      <p style="margin:2px 0 6px;">Jika iya, uraikan rencana Anda :</p>
+
+      <div class="sub-huruf">a. Perusahaan / jenis usaha yang akan dibuat / tempat bekerja</div>
+      <div class="baris-titik"><span class="lbl">Nama perusahaan dan/atau jenis usaha</span><span>:</span><span class="isi"><input type="text" data-key="f_perusahaan"></span></div>
+      <div class="baris-titik"><span class="lbl">Posisi / Jabatan</span><span>:</span><span class="isi"><input type="text" data-key="f_posisi1"></span></div>
+      <div class="baris-titik"><span class="lbl">Situasi yang dapat menimbulkan Konflik Kepentingan</span><span>:</span><span class="isi"><input type="text" data-key="f_situasi1"></span></div>
+
+      <div class="sub-huruf">b. Organisasi yang akan terlibat aktif</div>
+      <div class="baris-titik"><span class="lbl">Nama organisasi</span><span>:</span><span class="isi"><input type="text" data-key="f_organisasi"></span></div>
+      <div class="baris-titik"><span class="lbl">Posisi / Jabatan</span><span>:</span><span class="isi"><input type="text" data-key="f_posisi2"></span></div>
+      <div class="baris-titik"><span class="lbl">Situasi yang dapat menimbulkan Konflik Kepentingan</span><span>:</span><span class="isi"><input type="text" data-key="f_situasi2"></span></div>
+    </div>
+  </section>
+
+  <!-- ============================= PERNYATAAN ============================= -->
+  <section class="pernyataan">
+    <ol>
+      <li>Saya menyatakan bahwa formulir daftar kepentingan pribadi yang telah saya isi di atas adalah benar.</li>
+      <li>Saya bertanggung jawab untuk melakukan langkah pengelolaan sesuai dengan peraturan untuk menghindarkan saya mengambil keputusan dan/atau tindakan pada kondisi Konflik Kepentingan.</li>
+      <li>Saya bertanggung jawab untuk memperbarui formulir kepentingan pribadi setiap terjadi perubahan yang relevan dalam keadaan pribadi saya.</li>
+    </ol>
+  </section>
+
+  <!-- TANDA TANGAN -->
+  <div class="ttd">
+    <p>(Tempat, tanggal, bulan, tahun)</p>
+    <p>Ttd.</p>
+    <div class="spasi"></div>
+    <div class="ttd-pad-wrap">
+      <p class="ttd-pad-hint">Tanda tangan digital — gambar di dalam kotak menggunakan mouse / sentuhan.</p>
+      <canvas id="ttdCanvas" width="520" height="180"></canvas>
+      <div class="ttd-tools">
+        <button type="button" id="btnBersihTtd">Hapus Tanda Tangan</button>
+        <button type="button" id="btnBatalTtd" disabled>Undo</button>
+      </div>
+    </div>
+    <div class="nama-nip">
+      <input type="text" data-key="ttd_nama" placeholder="(nama lengkap)"><br>
+      <input type="text" data-key="ttd_nip" placeholder="(NIP)">
+    </div>
+  </div>
+
+  <p class="footer-note">Formulir Daftar Kepentingan Pribadi — Dinas Komunikasi dan Informatika Kabupaten Aceh Tengah</p>
+</div>
+
+<div id="toast"></div>
+
+<script>
+  /* ---------- Membangun baris tabel A, B, C, D ---------- */
+  function bangunTabel() {
+    document.querySelectorAll('tbody[data-cols][data-prefix]').forEach(function (tbody) {
+      var jumlahKolomIsi = parseInt(tbody.dataset.cols, 10);
+      var prefix = tbody.dataset.prefix;
+      var labelBaris = ['1', '2', '3', 'Dst'];
+      tbody.innerHTML = '';
+
+      labelBaris.forEach(function (label) {
+        var kunci = label.toLowerCase();           // '1','2','3','dst'
+        var tr = document.createElement('tr');
+
+        var tdNo = document.createElement('td');
+        tdNo.className = 'no';
+        tdNo.textContent = label;
+        tr.appendChild(tdNo);
+
+        for (var j = 0; j < jumlahKolomIsi; j++) {
+          var td = document.createElement('td');
+          td.className = 'isi-kolom';
+          var ta = document.createElement('textarea');
+          ta.className = 'sel';
+          ta.setAttribute('data-key', prefix + kunci + '_' + j);
+          ta.setAttribute('rows', '2');
+          td.appendChild(ta);
+          tr.appendChild(td);
+        }
+        tbody.appendChild(tr);
+      });
+    });
+  }
+
+  /* ---------- Otomatis menyesuaikan tinggi textarea ---------- */
+  function autosize(ta) {
+    ta.style.height = 'auto';
+    ta.style.height = (ta.scrollHeight + 2) + 'px';
+  }
+  function autosizeSemua() {
+    document.querySelectorAll('textarea.sel').forEach(autosize);
+  }
+
+  /* ---------- Tanda tangan (canvas) ---------- */
+  var KUNCI_TTD = 'fdp-ttd';
+  var RASIO_CANVAS = 2;      // resolusi 2x agar tanda tangan halus saat dicetak
+  var canvas = document.getElementById('ttdCanvas');
+  var ctx = canvas.getContext('2d');
+  var menggambar = false;
+  var punyaIsi = false;
+  var tumpukan = [];          // simpan data image untuk undo
+  var MAX_TUMPUKAN = 20;
+
+  function setTransformGambar() {
+    ctx.setTransform(RASIO_CANVAS, 0, 0, RASIO_CANVAS, 0, 0);
+    ctx.lineWidth = 2.4;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = '#0a0a0a';
+  }
+  function resetTransformGambar() {
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+  }
+  function bersihkanCanvas() {
+    resetTransformGambar();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    setTransformGambar();
+  }
+  function renderTtd(url, done) {
+    var img = new Image();
+    img.onload = function () {
+      resetTransformGambar();
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      setTransformGambar();
+      if (done) done();
+    };
+    img.src = url;
+  }
+
+  function setupCanvas() {
+    var cekWidth = canvas.parentElement.clientWidth;
+    var width = (cekWidth && cekWidth > 100) ? cekWidth : 520;
+    var height = 180;
+    canvas.width = width * RASIO_CANVAS;
+    canvas.height = height * RASIO_CANVAS;
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+    setTransformGambar();
+  }
+
+  function dapatPosisi(e) {
+    var r = canvas.getBoundingClientRect();
+    var x, y;
+    if (e.touches && e.touches.length) {
+      x = e.touches[0].clientX - r.left;
+      y = e.touches[0].clientY - r.top;
+    } else {
+      x = e.clientX - r.left;
+      y = e.clientY - r.top;
+    }
+    // skala ke koordinat logika (karena canvas pakai setTransform dengan rasio)
+    return { x: x, y: y };
+  }
+
+  function mulaiGambar(e) {
+    e.preventDefault();
+    var p = dapatPosisi(e);
+    tumpukan.push(canvas.toDataURL());
+    if (tumpukan.length > MAX_TUMPUKAN) tumpukan.shift();
+    menggambar = true;
+    punyaIsi = true;
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y);
+    ctx.lineTo(p.x + 0.01, p.y + 0.01); // titik kecil agar klik tunggal tetap membekas
+    ctx.stroke();
+    updateTombol();
+  }
+
+  function lanjutGambar(e) {
+    if (!menggambar) return;
+    e.preventDefault();
+    var p = dapatPosisi(e);
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+  }
+
+  function selesaiGambar() {
+    if (menggambar) {
+      menggambar = false;
+      simpanTtd();
+      updateTombol();
+    }
+  }
+
+  function bersihkanTtd() {
+    tumpukan = [];
+    punyaIsi = false;
+    bersihkanCanvas();
+    try { localStorage.removeItem(KUNCI_TTD); } catch (e) {}
+    updateTombol();
+  }
+
+  function undo() {
+    if (!tumpukan.length) return;
+    var url = tumpukan.pop();
+    if (!url) {
+      bersihkanCanvas();
+      updateTombol();
+      return;
+    }
+    punyaIsi = true;
+    renderTtd(url, function () {
+      simpanTtd();
+      updateTombol();
+    });
+  }
+
+  function updateTombol() {
+    var btnUndo = document.getElementById('btnBatalTtd');
+    btnUndo.disabled = tumpukan.length === 0;
+    var btnHapus = document.getElementById('btnBersihTtd');
+    btnHapus.disabled = !punyaIsi;
+  }
+
+  function simpanTtd() {
+    try {
+      localStorage.setItem(KUNCI_TTD, canvas.toDataURL());
+    } catch (e) {}
+  }
+  function muatTtd() {
+    var url = null;
+    try { url = localStorage.getItem(KUNCI_TTD); } catch (e) {}
+    if (url) {
+      punyaIsi = true;
+      renderTtd(url, updateTombol);
+    } else {
+      updateTombol();
+    }
+  }
+
+  canvas.addEventListener('mousedown', mulaiGambar);
+  canvas.addEventListener('mousemove', lanjutGambar);
+  window.addEventListener('mouseup', selesaiGambar);
+  canvas.addEventListener('touchstart', mulaiGambar, { passive: false });
+  canvas.addEventListener('touchmove', lanjutGambar, { passive: false });
+  canvas.addEventListener('touchend', selesaiGambar);
+  document.getElementById('btnBersihTtd').addEventListener('click', bersihkanTtd);
+  document.getElementById('btnBatalTtd').addEventListener('click', undo);
+
+
+  var NAMA_SIMPAN = 'fdp-aplikasi';
+
+  function toast(teks) {
+    var el = document.getElementById('toast');
+    el.textContent = teks;
+    el.classList.add('tampil');
+    clearTimeout(el._t);
+    el._t = setTimeout(function () { el.classList.remove('tampil'); }, 2000);
+  }
+
+  /* ---------- Simpan / muat ---------- */
+  function kumpulkan() {
+    var data = {};
+    document.querySelectorAll('[data-key]').forEach(function (el) {
+      var k = el.dataset.key;
+      if (el.type === 'radio') {
+        data[k] = el.checked;
+      } else {
+        data[k] = el.value;
+      }
+    });
+    return data;
+  }
+  function simpan() {
+    try {
+      localStorage.setItem(NAMA_SIMPAN, JSON.stringify(kumpulkan()));
+      toast('Data tersimpan di browser ini.');
+    } catch (e) {
+      toast('Gagal menyimpan.');
+    }
+  }
+  function muat() {
+    var data = {};
+    try { data = JSON.parse(localStorage.getItem(NAMA_SIMPAN) || '{}'); } catch (e) {}
+    document.querySelectorAll('[data-key]').forEach(function (el) {
+      var v = data[el.dataset.key];
+      if (v === undefined) return;
+      if (el.type === 'radio') { el.checked = !!v; }
+      else { el.value = v; }
+    });
+    autosizeSemua();
+  }
+  function bersihkan() {
+    if (!confirm('Kosongkan seluruh isian formulir? Data tersimpan juga akan dihapus.')) return;
+    document.querySelectorAll('[data-key]').forEach(function (el) {
+      if (el.type === 'radio') { el.checked = false; }
+      else { el.value = ''; }
+    });
+    try { localStorage.removeItem(NAMA_SIMPAN); } catch (e) {}
+    bersihkanTtd();
+    autosizeSemua();
+    toast('Formulir dikosongkan.');
+  }
+
+  /* ---------- Kirim ke server (MySQL via PHP) ---------- */
+  var URL_SERVER = 'backend/simpan.php';   // Sesuaikan bila file backend berbeda lokasi
+
+  function ambilNilaiTab(prefix) {
+    var flat = kumpulkan();
+    var out = {};
+    ['1', '2', '3', 'dst'].forEach(function (label) {
+      for (var j = 0; j < 4; j++) {
+        var k = prefix + label + '_' + j;
+        if (k in flat) out[k] = flat[k] || '';
+      }
+    });
+    return out;
+  }
+
+  function susunPayload() {
+    var flat = kumpulkan();
+
+    var e = {};
+    [1, 2, 3].forEach(function (n) {
+      e['e' + n + '_ya']       = flat['e' + n + '_ya'] === true;
+      e['e' + n + '_tidak']    = flat['e' + n + '_tidak'] === true;
+      e['e' + n + '_nama']     = flat['e' + n + '_nama'] || '';
+      e['e' + n + '_posisi']   = flat['e' + n + '_posisi'] || '';
+      e['e' + n + '_institusi']= flat['e' + n + '_institusi'] || '';
+      e['e' + n + '_situasi']  = flat['e' + n + '_situasi'] || '';
+    });
+
+    var f = {
+      ya:         flat.f1_ya === true,
+      tidak:      flat.f1_tidak === true,
+      perusahaan: flat.f_perusahaan || '',
+      posisi1:    flat.f_posisi1 || '',
+      situasi1:   flat.f_situasi1 || '',
+      organisasi: flat.f_organisasi || '',
+      posisi2:    flat.f_posisi2 || '',
+      situasi2:   flat.f_situasi2 || ''
+    };
+
+    return {
+      nama:        flat.nama || '',
+      nip:         flat.nip || '',
+      pangkat:     flat.pangkat || '',
+      jabatan:     flat.jabatan || '',
+      perangkat:   flat.perangkat || '',
+      unit_kerja:  flat.unit || '',
+      tanggal_isi: flat.tanggal || '',
+      bagian_a:    JSON.stringify(ambilNilaiTab('a')),
+      bagian_b:    JSON.stringify(ambilNilaiTab('b')),
+      bagian_c:    JSON.stringify(ambilNilaiTab('c')),
+      bagian_d:    JSON.stringify(ambilNilaiTab('d')),
+      bagian_e:    JSON.stringify(e),
+      bagian_f:    JSON.stringify(f),
+      ttd:         (typeof punyaIsi !== 'undefined' && punyaIsi) ? canvas.toDataURL('image/png') : '',
+      ttd_nama:    flat.ttd_nama || '',
+      ttd_nip:     flat.ttd_nip || ''
+    };
+  }
+
+  async function kirimKeServer() {
+    var btn = document.getElementById('btnKirim');
+    var payload = susunPayload();
+
+    if (!payload.nama || !payload.nip) {
+      toast('Gagal: Nama dan NIP wajib diisi.');
+      return;
+    }
+
+    var teksAsli = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'Mengirim…';
+
+    try {
+      var resp = await fetch(URL_SERVER, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      var hasil = await resp.json();
+      if (hasil.ok) {
+        toast('Tersimpan ke database (ID #' + hasil.id + ').');
+      } else {
+        toast('Gagal menyimpan: ' + (hasil.message || resp.status));
+      }
+    } catch (e) {
+      toast('Tidak dapat terhubung ke server (backend belum aktif?).');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = teksAsli;
+    }
+  }
+
+  /* ---------- Inisialisasi ---------- */
+  bangunTabel();
+  setupCanvas();
+  muat();
+  muatTtd();
+  autosizeSemua();
+
+  document.querySelectorAll('textarea.sel').forEach(function (ta) {
+    ta.addEventListener('input', function () { autosize(ta); simpan(); });
+  });
+  document.querySelectorAll('[data-key]').forEach(function (el) {
+    if (el.tagName === 'INPUT') {
+      el.addEventListener('input', simpan);
+      el.addEventListener('change', simpan); // radio
+    }
+  });
+  window.addEventListener('beforeprint', autosizeSemua);
+</script>
+</body>
+</html>
