@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Unduh Aplikasi SiKonKep</title>
+<title>SiKonKep — Dinas Kominfo Aceh Tengah</title>
 <style>
   :root { --biru:#0f2438; --biru2:#1c3a57; --hijau:#1c7c3c; }
   * { box-sizing:border-box; }
@@ -13,46 +13,63 @@
     font-family:"Segoe UI",Arial,sans-serif; color:#111;
   }
   .kartu {
-    width:480px; max-width:94vw; background:#fff; border-radius:12px; padding:32px 30px;
-    box-shadow:0 12px 40px rgba(0,0,0,.35); text-align:center;
+    width:520px; max-width:94vw; background:#fff; border-radius:14px; padding:30px 28px;
+    box-shadow:0 14px 40px rgba(0,0,0,.35); text-align:center;
   }
-  .kartu h1 { margin:0 0 4px; font-size:20px; color:var(--biru); }
-  .kartu .sub { margin:0 0 22px; font-size:13px; color:#567; }
+  .kartu h1 { margin:0 0 4px; font-size:22px; color:var(--biru); }
+  .kartu .sub { margin:0 0 18px; font-size:12.5px; color:#567; line-height:1.5 }
+  .badge-online { display:inline-block; background:#e7f3ec; color:#1c7c3c; border:1px solid #b6dfc2; padding:4px 10px; border-radius:999px; font-size:11px; font-weight:700; margin-bottom:14px }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:14px 0 10px }
   .btn {
-    display:inline-block; padding:14px 26px; border-radius:10px; font-size:16px; font-weight:700;
-    color:#fff !important; text-decoration:none; background:var(--hijau); margin:8px 0;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    padding:13px 16px; border-radius:10px; font-size:14px; font-weight:700;
+    color:#fff !important; text-decoration:none; border:none; cursor:pointer;
   }
-  .btn:hover { background:#229049; }
-  .btn.secondary { background:var(--biru2); font-size:14px; font-weight:600; }
-  .info { text-align:left; font-size:13px; line-height:1.6; color:#334; margin:20px auto 0; padding:14px; background:#f2f6fa; border-radius:8px; }
-  .info code { background:#e2e9f1; padding:1px 6px; border-radius:4px; font-size:12px; }
-  .warn { margin-top:14px; font-size:12px; color:#a33; background:#fdeaea; border:1px solid #f3c6c6; padding:10px 12px; border-radius:8px; text-align:left; }
+  .btn.utama { background:var(--hijau); grid-column:1 / -1; font-size:15px; padding:15px }
+  .btn.utama:hover { background:#229049; }
+  .btn.biru { background:var(--biru2); }
+  .btn.biru:hover { background:#244a6e; }
+  .btn.ghost { background:#eef2f6; color:var(--biru) !important; border:1px solid #d7dee6 }
+  .info { text-align:left; font-size:12.5px; line-height:1.6; color:#334; margin:16px auto 0; padding:12px 14px; background:#f2f6fa; border-radius:8px; }
+  .info code { background:#e2e9f1; padding:1px 6px; border-radius:4px; font-size:11.5px; }
+  .warn { margin-top:12px; font-size:11.5px; color:#7f2b2b; background:#fdeaea; border:1px solid #f3c6c6; padding:10px 12px; border-radius:8px; text-align:left; }
   ul { margin:6px 0 0 18px; padding:0; }
+  .foot { margin-top:14px; font-size:11px; color:#789 }
+  .foot a { color:var(--biru2) }
 </style>
 </head>
 <body>
   <div class="kartu">
+    <div class="badge-online">● ONLINE — Vercel + Neon aktif</div>
     <h1>SiKonKep</h1>
-    <p class="sub">Formulir Daftar Kepentingan Pribadi — Dinas Komunikasi dan Informatika Kab. Aceh Tengah</p>
+    <p class="sub">Formulir Daftar Kepentingan Pribadi<br>Dinas Komunikasi dan Informatika Kab. Aceh Tengah</p>
 
-    <a class="btn" href="sikonkep-localhost.zip" download>⬇ Unduh sikonkep-localhost.zip</a>
+    <div class="grid">
+      <a class="btn utama" href="formulir-daftar-kepentingan-pribadi.html">📝 Isi Formulir Online</a>
+      <a class="btn biru" href="login.html">🔐 Login Admin</a>
+      <a class="btn biru" href="admin.html">📊 Dashboard Admin</a>
+      <a class="btn ghost" href="formulir-daftar-kepentingan-pribadi.html" target="_blank" style="grid-column:1 / -1">👁 Pratinjau Formulir (tab baru)</a>
+    </div>
 
     <div class="info">
-      <b>Isi file ZIP:</b>
+      <b>Versi Online (Vercel + Neon):</b>
       <ul>
-        <li>Halaman formulir (<code>.html</code>) untuk pegawai</li>
-        <li>Backend PHP + skema database MySQL</li>
-        <li>Halaman admin (login, rekap, detail, export)</li>
-        <li>Panduan pemasangan (<code>PANDUAN.md</code>)</li>
+        <li>Tombol di atas langsung simpan ke database <code>Neon PostgreSQL</code></li>
+        <li>Login admin pakai <code>ADMIN_USER</code> / <code>ADMIN_PASS</code> di Vercel</li>
+        <li>Tidak perlu XAMPP — cukup buka link Vercel</li>
       </ul>
     </div>
 
-    <a class="btn secondary" href="formulir-daftar-kepentingan-pribadi.html" target="_blank">👁 Pratinjau Formulir</a>
-
-    <div class="warn">
-      ⚠️ Pastikan hasil unduhan bernama <b>sikonkep-localhost.zip</b> (≈28&nbsp;KB).<br>
-      Jika yang terunduh bernama <b>.patch</b>, itu bukan aplikasinya — gunakan tombol hijau di atas.
+    <div class="info" style="background:#fff; border:1px solid #e2e8f0">
+      <b>Butuh versi XAMPP (offline)?</b><br>
+      <a class="btn ghost" href="sikonkep-localhost.zip" download style="margin-top:8px; width:100%">⬇ Unduh sikonkep-localhost.zip</a>
+      <ul>
+        <li>Untuk intranet kantor tanpa internet</li>
+        <li>Isi: <code>backend/</code> PHP + <code>schema.sql</code> MySQL</li>
+      </ul>
     </div>
+
+    <p class="foot">Halaman utama: <code>/</code> → menu ini. Formulir: <code>/formulir-daftar-kepentingan-pribadi.html</code> &nbsp;|&nbsp; Admin: <code>/login.html</code></p>
   </div>
 </body>
 </html>
