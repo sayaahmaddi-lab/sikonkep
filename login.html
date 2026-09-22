@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login Admin — SiKonKep</title>
+<style>
+  :root{--biru:#0f2438;--biru2:#1c3a57;--hijau:#1c7c3c}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0f2438 0%,#1c3a57 55%,#2a4e73 100%);font-family:"Segoe UI",Arial,sans-serif;color:#111}
+  .kartu{width:420px;max-width:94vw;background:#fff;border-radius:14px;padding:28px 26px;box-shadow:0 14px 40px rgba(0,0,0,.35)}
+  h1{margin:0 0 4px;font-size:18px;color:var(--biru)}
+  .sub{margin:0 0 18px;font-size:12.5px;color:#567}
+  label{display:block;font-size:12.5px;font-weight:600;margin:10px 0 4px}
+  input{width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:8px;font:inherit}
+  input:focus{outline:none;border-color:#1c3a57;box-shadow:0 0 0 3px rgba(28,58,87,.15)}
+  .btn{width:100%;margin-top:16px;padding:11px;border:none;border-radius:8px;background:var(--biru2);color:#fff;font-weight:700;cursor:pointer}
+  .btn:hover{background:#244a6e}
+  .btn[disabled]{opacity:.6;cursor:default}
+  .msg{margin-top:12px;padding:9px 12px;border-radius:8px;font-size:12.5px;display:none}
+  .msg.ok{display:block;background:#e7f3ec;color:#1c7c3c;border:1px solid #b6dfc2}
+  .msg.err{display:block;background:#fdeaea;color:#7f2b2b;border:1px solid #f3c6c6}
+  .foot{margin-top:14px;font-size:11.5px;color:#667;text-align:center}
+  .foot a{color:var(--biru2);text-decoration:none}
+</style>
+</head>
+<body>
+  <form class="kartu" id="formLogin" autocomplete="on">
+    <h1>Login Admin SiKonKep</h1>
+    <p class="sub">Dinas Kominfo Kab. Aceh Tengah — masuk untuk melihat rekap formulir.</p>
+    <label for="user">Username</label>
+    <input id="user" name="username" type="text" required placeholder="ADMIN_USER" autofocus>
+    <label for="pass">Password</label>
+    <input id="pass" name="password" type="password" required placeholder="ADMIN_PASS">
+    <button class="btn" id="btn" type="submit">Masuk</button>
+    <div id="msg" class="msg"></div>
+    <p class="foot">Belum punya akun? Atur <code>ADMIN_USER</code> & <code>ADMIN_PASS</code> di Vercel → Settings → Environment Variables.<br><a href="formulir-daftar-kepentingan-pribadi.html">← Kembali ke Formulir</a></p>
+  </form>
+<script>
+const API = '/api/admin?action=login';
+const form = document.getElementById('formLogin');
+const btn = document.getElementById('btn');
+const msg = document.getElementById('msg');
+
+function toast(t, ok){
+  msg.className = 'msg ' + (ok ? 'ok' : 'err');
+  msg.textContent = t;
+  msg.style.display = 'block';
+}
+
+form.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const username = document.getElementById('user').value.trim();
+  const password = document.getElementById('pass').value.trim();
+  if(!username || !password){ toast('Lengkapi username & password', false); return; }
+  btn.disabled = true; btn.textContent = 'Memeriksa…';
+  try{
+    const r = await fetch(API, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({username, password})
+    });
+    const j = await r.json();
+    if(j.ok && j.token){
+      localStorage.setItem('sikonkep_token', j.token);
+      localStorage.setItem('sikonkep_user', j.user || username);
+      toast('Login berhasil — mengalihkan…', true);
+      setTimeout(()=> location.href='admin.html', 600);
+    } else {
+      toast(j.message || 'Gagal login ('+r.status+')', false);
+    }
+  } catch(err){
+    toast('Tidak dapat terhubung ke server: '+err.message, false);
+  } finally {
+    btn.disabled=false; btn.textContent='Masuk';
+  }
+});
+
+// jika sudah login redirect
+try{
+  const t = localStorage.getItem('sikonkep_token');
+  if(t) {
+    // cek validitas via /api/admin?action=me
+    fetch('/api/admin?action=me', { headers:{Authorization:'Bearer '+t}})
+      .then(r=>r.json()).then(j=>{ if(j.ok) location.href='admin.html'; })
+      .catch(()=>{});
+  }
+}catch{}
+</script>
+</body>
+</html>

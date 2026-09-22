@@ -51,7 +51,7 @@
   .toolbar button:hover { background: #2a4e73; }
   .toolbar button.utama { background: #1c7c3c; border-color: #1c7c3c; }
   .toolbar button.utama:hover { background: #229049; }
-  .toolbar .hint { font-size: 11px; color: #bcd0e6; width: 100%; margin: 2px 0 0; }
+
 
   /* ============================= HALAMAN / KERTAS ============================= */
   .page {
@@ -295,11 +295,8 @@
 <!-- ================= TOOLBAR (tidak ikut tercetak) ================= -->
 <div class="toolbar">
   <span class="brand">Formulir Daftar Kepentingan Pribadi</span>
-  <button type="button" onclick="simpan()">💾 Simpan di Browser</button>
   <button type="button" id="btnKirim" class="utama" onclick="kirimKeServer()">☁️ Simpan ke Database</button>
-  <button type="button" onclick="window.print()">🖨️ Cetak / Simpan PDF</button>
   <button type="button" onclick="bersihkan()">🗑️ Kosongkan</button>
-  <p class="hint">Isian otomatis tersimpan di browser ini. Untuk PDF: klik "Cetak / Simpan PDF", lalu pilih "Save as PDF". Tombol "Simpan ke Database" mengirim data + tanda tangan ke server MySQL.</p>
 </div>
 
 <div class="page">
@@ -757,8 +754,11 @@
     toast('Formulir dikosongkan.');
   }
 
-  /* ---------- Kirim ke server (MySQL via PHP) ---------- */
-  var URL_SERVER = 'backend/simpan.php';   // Sesuaikan bila file backend berbeda lokasi
+  /* ---------- Kirim ke server (Neon/Vercel atau MySQL/XAMPP) ---------- */
+  // Otomatis: di localhost → backend/simpan.php (PHP+MySQL), di Vercel/online → /api/simpan (Neon PostgreSQL)
+  var IS_LOCAL = location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.hostname === '';
+  var URL_SERVER = IS_LOCAL ? 'backend/simpan.php' : '/api/simpan';
+  var URL_FALLBACK = IS_LOCAL ? '/api/simpan' : 'backend/simpan.php';
 
   function ambilNilaiTab(prefix) {
     var flat = kumpulkan();
@@ -829,20 +829,30 @@
     btn.disabled = true;
     btn.textContent = 'Mengirim…';
 
-    try {
-      var resp = await fetch(URL_SERVER, {
+    async function cobaKirim(url){
+      var resp = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
-      var hasil = await resp.json();
-      if (hasil.ok) {
-        toast('Tersimpan ke database (ID #' + hasil.id + ').');
+      var hasil;
+      try{ hasil = await resp.json(); } catch(e){ hasil = { ok:false, message:'Respons bukan JSON ('+resp.status+')'}; }
+      return { resp, hasil };
+    }
+
+    try {
+      var r = await cobaKirim(URL_SERVER);
+      // jika 404 (endpoint tidak ada di mode ini), coba fallback
+      if (r.resp.status === 404 && URL_FALLBACK !== URL_SERVER) {
+        r = await cobaKirim(URL_FALLBACK);
+      }
+      if (r.hasil.ok) {
+        toast('Tersimpan ke database (ID #' + r.hasil.id + ').');
       } else {
-        toast('Gagal menyimpan: ' + (hasil.message || resp.status));
+        toast('Gagal menyimpan: ' + (r.hasil.message || r.resp.status));
       }
     } catch (e) {
-      toast('Tidak dapat terhubung ke server (backend belum aktif?).');
+      toast('Tidak dapat terhubung ke server (backend belum aktif?). ' + (e.message||''));
     } finally {
       btn.disabled = false;
       btn.textContent = teksAsli;

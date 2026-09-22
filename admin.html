@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — SiKonKep</title>
+<style>
+  :root{--biru:#0f2438;--biru2:#1c3a57;--hijau:#1c7c3c;--abu:#eef1f5}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Segoe UI",Arial,sans-serif;background:#eef2f6;color:#111}
+  .bar{background:var(--biru);color:#fff;padding:12px 18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:10}
+  .bar h1{margin:0;font-size:15px;font-weight:600}
+  .bar .stat{margin-left:auto;font-size:12px;background:#132f4c;padding:6px 10px;border-radius:6px}
+  .bar .btn{padding:6px 12px;border-radius:6px;font-size:12px;text-decoration:none;color:#fff;background:var(--biru2);border:1px solid rgba(255,255,255,.25);cursor:pointer}
+  .bar .btn.ghost{background:transparent}
+  .bar .btn:hover{filter:brightness(1.15)}
+  .wrap{max-width:1320px;margin:0 auto;padding:18px}
+  .cards{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+  .card{background:#fff;border:1px solid #d7dee6;border-radius:10px;padding:14px 16px;min-width:160px}
+  .card b{font-size:22px;display:block}
+  .card span{font-size:12px;color:#567}
+  .toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+  .toolbar input, .toolbar select{padding:8px 10px;border:1px solid #cbd5e1;border-radius:8px;font-size:12.5px}
+  .toolbar .btn{padding:8px 14px;border-radius:8px;border:none;background:var(--biru2);color:#fff;font-weight:600;cursor:pointer;font-size:12.5px}
+  .toolbar .btn.hijau{background:var(--hijau)}
+  table{width:100%;border-collapse:collapse;background:#fff;font-size:12.5px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+  th,td{border:1px solid #d7dee6;padding:7px 9px;vertical-align:top;text-align:left}
+  th{background:var(--abu);font-size:11.5px;white-space:nowrap}
+  tr:hover td{background:#f8fafc}
+  .badge{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11px;font-weight:700}
+  .badge.baru{background:#e7f3ec;color:#1c7c3c}
+  .badge.proses{background:#e8effa;color:#1c3a57}
+  .badge.selesai{background:#e3e3e3;color:#333}
+  .badge.tolak{background:#fdeaea;color:#7f2b2b}
+  .jempol img{max-width:130px;max-height:70px;border:1px solid #ccc;border-radius:4px;background:#fff}
+  .kosong{padding:40px;text-align:center;color:#888;background:#fff;border:1px solid #d7dee6;border-radius:10px}
+  .modal{position:fixed;inset:0;background:rgba(10,20,35,.55);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}
+  .modal.show{display:flex}
+  .modal .box{background:#fff;border-radius:12px;max-width:760px;width:100%;max-height:90vh;overflow:auto;padding:18px 16px;box-shadow:0 14px 40px rgba(0,0,0,.35)}
+  .box h2{margin:0 0 10px;font-size:15px}
+  .box .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;font-size:12.5px}
+  .box .grid .full{grid-column:1 / -1}
+  .box label{font-weight:600;font-size:12px}
+  .box select, .box input, .box textarea{width:100%;padding:7px 9px;border:1px solid #cbd5e1;border-radius:6px;font:inherit}
+  .box textarea{min-height:56px}
+  .box .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+  .toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%) translateY(20px);background:#0f2438;color:#fff;padding:10px 16px;border-radius:8px;font-size:12.5px;opacity:0;pointer-events:none;transition:.25s;z-index:99}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  @media(max-width:900px){.box .grid{grid-template-columns:1fr} table{font-size:11.5px}}
+</style>
+</head>
+<body>
+  <div class="bar">
+    <h1>Admin — SiKonKep</h1>
+    <span id="stat" class="stat">Memuat…</span>
+    <a class="btn ghost" href="formulir-daftar-kepentingan-pribadi.html" target="_blank">Formulir</a>
+    <button class="btn" id="btnExport">⬇ Export CSV</button>
+    <button class="btn ghost" id="btnLogout">Keluar</button>
+  </div>
+  <div class="wrap">
+    <div class="cards">
+      <div class="card"><b id="cTotal">–</b><span>Total pengisian</span></div>
+      <div class="card"><b id="cBaru">–</b><span>Berstatus BARU</span></div>
+      <div class="card"><b id="cUser">–</b><span>Login sebagai</span></div>
+    </div>
+    <div class="toolbar">
+      <input id="q" type="search" placeholder="Cari nama / NIP / jabatan…" style="min-width:220px">
+      <select id="fStatus"><option value="">Semua status</option><option>BARU</option><option>DIPROSES</option><option>SELESAI</option><option>DITOLAK</option></select>
+      <button class="btn" id="btnRefresh">↻ Muat ulang</button>
+    </div>
+    <div id="tabelWrap" style="overflow-x:auto"></div>
+  </div>
+
+  <!-- Modal detail -->
+  <div id="modal" class="modal" onclick="if(event.target===this) tutupModal()">
+    <div class="box">
+      <h2 id="mJudul">Detail Isian</h2>
+      <div id="mIsi" class="grid"></div>
+      <div style="margin-top:12px; border-top:1px solid #e2e8f0; padding-top:12px" class="grid">
+        <div>
+          <label>Status</label>
+          <select id="mStatus"><option>BARU</option><option>DIPROSES</option><option>SELESAI</option><option>DITOLAK</option></select>
+        </div>
+        <div>
+          <label>Catatan admin</label>
+          <input id="mCatatan" maxlength="255" placeholder="Opsional">
+        </div>
+        <div class="full" style="display:flex;gap:8px;justify-content:flex-end;margin-top:6px">
+          <button class="btn" style="background:#64748b" onclick="tutupModal()">Tutup</button>
+          <button class="btn" style="background:var(--hijau)" id="btnSimpanStatus">Simpan Status</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+<script>
+const API_LIST = '/api/admin?action=list';
+const API_GET  = id => `/api/admin?action=get&id=${id}`;
+const API_STATUS = '/api/admin?action=status';
+const API_EXPORT = '/api/admin?action=export';
+const API_ME = '/api/admin?action=me';
+
+let DATA = [];
+let modalId = null;
+
+function getToken(){ return localStorage.getItem('sikonkep_token') || ''; }
+function authHeader(){ return { 'Authorization':'Bearer '+getToken(), 'Content-Type':'application/json' }; }
+function toast(t){ const el=document.getElementById('toast'); el.textContent=t; el.classList.add('show'); clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('show'),2200); }
+
+function needLogin(){
+  toast('Sesi habis — silakan login ulang');
+  setTimeout(()=> location.href='login.html', 800);
+}
+
+async function cekAuth(){
+  const t=getToken();
+  if(!t){ needLogin(); return false; }
+  try{
+    const r=await fetch(API_ME, {headers:{Authorization:'Bearer '+t}});
+    const j=await r.json();
+    if(!j.ok) throw new Error(j.message);
+    document.getElementById('cUser').textContent=j.user||localStorage.getItem('sikonkep_user')||'-';
+    return true;
+  }catch(e){
+    needLogin(); return false;
+  }
+}
+
+function badge(s){
+  const c = s==='BARU'?'baru': s==='DIPROSES'?'proses': s==='SELESAI'?'selesai':'tolak';
+  return `<span class="badge ${c}">${s}</span>`;
+}
+function fmtTanggal(v){
+  if(!v) return '-';
+  try{ const d=new Date(v); return d.toLocaleString('id-ID'); }catch{ return String(v).slice(0,19); }
+}
+function ringkas(obj, keys){
+  if(!obj) return '-';
+  let o={}; try{ o=JSON.parse(obj); }catch{ return '-'; }
+  const vals = keys.map(k=> o[k]).filter(v=> v && String(v).trim()!=='');
+  return vals.length? vals.join(' · ') : '-';
+}
+
+async function muat(){
+  if(!await cekAuth()) return;
+  document.getElementById('stat').textContent='Memuat…';
+  try{
+    const r=await fetch(API_LIST, { headers:{Authorization:'Bearer '+getToken()}});
+    const j=await r.json();
+    if(!r.ok || !j.ok) throw new Error(j.message||('HTTP '+r.status));
+    DATA=j.data||[];
+    document.getElementById('cTotal').textContent=DATA.length;
+    document.getElementById('cBaru').textContent=DATA.filter(x=>x.status==='BARU').length;
+    document.getElementById('stat').textContent=`Total ${DATA.length} • BARU ${DATA.filter(x=>x.status==='BARU').length}`;
+    render();
+  }catch(e){
+    if(String(e.message).includes('401')||String(e.message).includes('token')) needLogin();
+    else toast('Gagal memuat: '+e.message);
+    document.getElementById('stat').textContent='Gagal memuat';
+  }
+}
+
+function render(){
+  const q=(document.getElementById('q').value||'').toLowerCase();
+  const fs=document.getElementById('fStatus').value;
+  let rows=DATA.filter(r=>{
+    if(fs && r.status!==fs) return false;
+    if(q){
+      const hay=(r.nama+' '+r.nip+' '+r.jabatan+' '+r.perangkat+' '+r.unit_kerja).toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  });
+  if(!rows.length){
+    document.getElementById('tabelWrap').innerHTML=`<div class="kosong">Tidak ada data yang cocok.</div>`;
+    return;
+  }
+  let html=`<table><thead><tr>
+    <th>ID</th><th>Nama / NIP</th><th>Jabatan</th><th>Perangkat / Unit</th><th>Tgl Isi</th>
+    <th>A</th><th>B</th><th>C</th><th>D</th><th>E (Ya)</th><th>F</th><th>Ttd</th><th>Status</th><th>Dikirim</th><th>Aksi</th>
+  </tr></thead><tbody>`;
+  for(const r of rows){
+    let eYa=0; try{ const e=JSON.parse(r.bagian_e||'{}'); [1,2,3].forEach(n=>{ if(e['e'+n+'_ya']) eYa++; }); }catch{}
+    let fYa='-'; try{ const f=JSON.parse(r.bagian_f||'{}'); fYa=f.ya?'Ya': f.tidak?'Tidak':'-'; }catch{}
+    const ada = (s)=> {
+      try{
+        const o=JSON.parse(s||'{}'); let n=0;
+        for(const k in o){ if(o[k]&&String(o[k]).trim()!=='') n++; }
+        return n||'-';
+      }catch{return '-';}
+    };
+    html+=`<tr>
+      <td>${r.id}</td>
+      <td><b>${esc(r.nama)}</b><br><span style="color:#666">${esc(r.nip)}</span></td>
+      <td>${esc(r.jabatan||'-')}</td>
+      <td>${esc(r.perangkat||'-')}${r.unit_kerja?'<br><span style="color:#666">'+esc(r.unit_kerja)+'</span>':''}</td>
+      <td>${esc(r.tanggal_isi||'-')}</td>
+      <td>${ada(r.bagian_a)}</td><td>${ada(r.bagian_b)}</td><td>${ada(r.bagian_c)}</td><td>${ada(r.bagian_d)}</td>
+      <td>${eYa? eYa+' item':'-'}</td><td>${fYa}</td>
+      <td class="jempol">${r.ttd && r.ttd.startsWith('data:image/') ? `<img src="${esc(r.ttd)}" alt="ttd">` : '<span style="color:#aaa">-</span>'}</td>
+      <td>${badge(r.status)}<br><small style="color:#667">${esc(r.catatan_admin||'')}</small></td>
+      <td>${fmtTanggal(r.created_at)}</td>
+      <td><button class="btn" style="padding:6px 10px" onclick="buka(${r.id})">Lihat</button></td>
+    </tr>`;
+  }
+  html+='</tbody></table>';
+  document.getElementById('tabelWrap').innerHTML=html;
+}
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+async function buka(id){
+  try{
+    const r=await fetch(API_GET(id), { headers:{Authorization:'Bearer '+getToken()}});
+    const j=await r.json();
+    if(!j.ok) throw new Error(j.message);
+    const d=j.data; modalId=d.id;
+    document.getElementById('mJudul').textContent=`#${d.id} — ${d.nama} (${d.nip})`;
+    const box=document.getElementById('mIsi');
+    const det = [
+      ['Nama', d.nama], ['NIP', d.nip], ['Pangkat', d.pangkat], ['Jabatan', d.jabatan],
+      ['Perangkat Daerah', d.perangkat], ['Unit Kerja', d.unit_kerja], ['Tanggal Isi', d.tanggal_isi],
+      ['Status', d.status], ['Catatan Admin', d.catatan_admin], ['Dikirim', fmtTanggal(d.created_at)],
+      ['Nama TTD', d.ttd_nama], ['NIP TTD', d.ttd_nip],
+    ];
+    const jsonView = (title, val)=>{
+      if(!val) return `<div class="full"><b>${title}</b><br><span style="color:#888">-</span></div>`;
+      try{
+        const o=JSON.parse(val);
+        const pretty=JSON.stringify(o,null,2);
+        return `<div class="full"><b>${title}</b><pre style="background:#f8fafc;border:1px solid #e2e8f0;padding:8px;border-radius:6px;overflow:auto;max-height:160px;white-space:pre-wrap;word-break:break-word;font-size:11.5px">${esc(pretty)}</pre></div>`;
+      }catch{ return `<div class="full"><b>${title}</b><br>${esc(val)}</div>`; }
+    };
+    let html='';
+    det.forEach(([k,v])=> html+=`<div><b>${k}</b><br>${esc(v||'-')}</div>`);
+    html+= jsonView('Bagian A', d.bagian_a);
+    html+= jsonView('Bagian B', d.bagian_b);
+    html+= jsonView('Bagian C', d.bagian_c);
+    html+= jsonView('Bagian D', d.bagian_d);
+    html+= jsonView('Bagian E', d.bagian_e);
+    html+= jsonView('Bagian F', d.bagian_f);
+    if(d.ttd && d.ttd.startsWith('data:image/'))
+      html+=`<div class="full"><b>Tanda tangan</b><br><img src="${esc(d.ttd)}" style="max-width:360px;border:1px solid #ccc;border-radius:6px;background:#fff"></div>`;
+    box.innerHTML=html;
+    document.getElementById('mStatus').value=d.status;
+    document.getElementById('mCatatan').value=d.catatan_admin||'';
+    document.getElementById('modal').classList.add('show');
+  }catch(e){ toast('Gagal membuka detail: '+e.message); }
+}
+function tutupModal(){ document.getElementById('modal').classList.remove('show'); modalId=null; }
+
+document.getElementById('btnSimpanStatus').addEventListener('click', async ()=>{
+  if(!modalId) return;
+  const status=document.getElementById('mStatus').value;
+  const catatan=document.getElementById('mCatatan').value;
+  const btn=document.getElementById('btnSimpanStatus');
+  btn.disabled=true; btn.textContent='Menyimpan…';
+  try{
+    const r=await fetch(API_STATUS, { method:'POST', headers:authHeader(), body:JSON.stringify({id:modalId, status, catatan_admin:catatan})});
+    const j=await r.json();
+    if(!j.ok) throw new Error(j.message);
+    toast('Status diperbarui');
+    tutupModal();
+    await muat();
+  }catch(e){ toast('Gagal: '+e.message); }
+  finally{ btn.disabled=false; btn.textContent='Simpan Status'; }
+});
+
+document.getElementById('btnExport').addEventListener('click', async ()=>{
+  const t=getToken();
+  // trigger download via fetch blob
+  try{
+    const r=await fetch(API_EXPORT, { headers:{Authorization:'Bearer '+t}});
+    if(!r.ok){ const j=await r.json().catch(()=>({message:r.statusText})); throw new Error(j.message||r.statusText); }
+    const blob=await r.blob();
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a'); a.href=url; a.download='rekap-sikonkep.csv'; a.click();
+    URL.revokeObjectURL(url);
+  }catch(e){ toast('Export gagal: '+e.message); }
+});
+document.getElementById('btnLogout').addEventListener('click', ()=>{
+  localStorage.removeItem('sikonkep_token');
+  location.href='login.html';
+});
+document.getElementById('btnRefresh').addEventListener('click', muat);
+document.getElementById('q').addEventListener('input', render);
+document.getElementById('fStatus').addEventListener('change', render);
+
+muat();
+</script>
+</body>
+</html>
