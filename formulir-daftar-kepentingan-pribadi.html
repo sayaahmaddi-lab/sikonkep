@@ -984,6 +984,16 @@
     canvas.style.height = (ch / RASIO_CANVAS) + 'px';
   }
 
+  // Isi "(Tempat, tanggal, bulan, tahun)" secara otomatis di mode lihat.
+  // Dari isian tanggal formulir; bila belum memuat kota, diawali "Takengon".
+  function isiTempatTanggal(row) {
+    var el = document.querySelector('.ttd .label-tempat');
+    if (!el) return;
+    var tgl = (row.tanggal_isi || '').trim();
+    if (!tgl) { el.textContent = 'Takengon, ………………………………'; return; }
+    el.textContent = /,/.test(tgl) ? tgl : 'Takengon, ' + tgl;
+  }
+
   async function initModeLihat() {
     document.body.classList.add('mode-lihat');
 
@@ -1010,6 +1020,7 @@
       var row = j.data;
 
       terapkanFlat(bangunFlatDariBaris(row));
+      isiTempatTanggal(row);
 
       // Tambahkan awalan "NIP. " bila belum ada (khusus tampilan lembar jadi)
       var nipEl = document.querySelector('input[data-key=\"ttd_nip\"]');
