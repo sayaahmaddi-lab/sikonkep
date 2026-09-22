@@ -29,13 +29,6 @@
   .btn.utama:hover { background:#229049; }
   .btn.biru { background:var(--biru2); }
   .btn.biru:hover { background:#244a6e; }
-  .btn.ghost { background:#eef2f6; color:var(--biru) !important; border:1px solid #d7dee6 }
-  .info { text-align:left; font-size:12.5px; line-height:1.6; color:#334; margin:16px auto 0; padding:12px 14px; background:#f2f6fa; border-radius:8px; }
-  .info code { background:#e2e9f1; padding:1px 6px; border-radius:4px; font-size:11.5px; }
-  .warn { margin-top:12px; font-size:11.5px; color:#7f2b2b; background:#fdeaea; border:1px solid #f3c6c6; padding:10px 12px; border-radius:8px; text-align:left; }
-  ul { margin:6px 0 0 18px; padding:0; }
-  .foot { margin-top:14px; font-size:11px; color:#789 }
-  .foot a { color:var(--biru2) }
 </style>
 </head>
 <body>
@@ -48,28 +41,7 @@
       <a class="btn utama" href="formulir-daftar-kepentingan-pribadi.html">📝 Isi Formulir Online</a>
       <a class="btn biru" href="login.html">🔐 Login Admin</a>
       <a class="btn biru" href="admin.html">📊 Dashboard Admin</a>
-      <a class="btn ghost" href="formulir-daftar-kepentingan-pribadi.html" target="_blank" style="grid-column:1 / -1">👁 Pratinjau Formulir (tab baru)</a>
     </div>
-
-    <div class="info">
-      <b>Versi Online (Vercel + Neon):</b>
-      <ul>
-        <li>Tombol di atas langsung simpan ke database <code>Neon PostgreSQL</code></li>
-        <li>Login admin pakai <code>ADMIN_USER</code> / <code>ADMIN_PASS</code> di Vercel</li>
-        <li>Tidak perlu XAMPP — cukup buka link Vercel</li>
-      </ul>
-    </div>
-
-    <div class="info" style="background:#fff; border:1px solid #e2e8f0">
-      <b>Butuh versi XAMPP (offline)?</b><br>
-      <a class="btn ghost" href="sikonkep-localhost.zip" download style="margin-top:8px; width:100%">⬇ Unduh sikonkep-localhost.zip</a>
-      <ul>
-        <li>Untuk intranet kantor tanpa internet</li>
-        <li>Isi: <code>backend/</code> PHP + <code>schema.sql</code> MySQL</li>
-      </ul>
-    </div>
-
-    <p class="foot">Halaman utama: <code>/</code> → menu ini. Formulir: <code>/formulir-daftar-kepentingan-pribadi.html</code> &nbsp;|&nbsp; Admin: <code>/login.html</code></p>
   </div>
 </body>
 </html>
