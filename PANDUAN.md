@@ -82,6 +82,7 @@ ADMIN_SECRET=a3f8c9d2e1b4...32hex...
 
 1. Buka **https://vercel.com** → Sign up (pakai GitHub) → **Add New → Project** → **Import** repo `sayaahmaddi-lab/sikonkep`.
 2. Vercel otomatis deteksi **Framework: Other** (karena static + Functions) → biarkan default.
+   Versi Node.js mengikuti `"engines": { "node": "24.x" }` di `package.json` (Node 18 sudah dihentikan Vercel sejak 1 Sep 2025 — build akan gagal bila masih 18.x).
 3. Buka **Settings → Environment Variables** → tambah 4 variabel satu per satu (Environment: **Production** + **Preview**):
    - `DATABASE_URL`
    - `ADMIN_USER`
@@ -102,6 +103,7 @@ ADMIN_SECRET=a3f8c9d2e1b4...32hex...
 
 | Gejala | Solusi |
 |---|---|
+| Build gagal: `Node.js Version "18.x" is discontinued and must be upgraded` | Pastikan `package.json` memakai `"engines": { "node": "24.x" }` (sudah), lalu **Redeploy**. Bila masih gagal, cek Vercel → **Settings → Build and Deployment → Node.js Version** → pilih **24.x**. |
 | `DATABASE_URL belum diatur` | Cek Vercel → Settings → Env Vars, pastikan `DATABASE_URL` ada di **Production**, lalu **Redeploy** (Deployments → ⋯ → Redeploy). |
 | `Gagal menyimpan: ... self-signed certificate` | Pastikan `DATABASE_URL` pakai `?sslmode=require` dan `api/_lib.js` sudah `ssl:{rejectUnauthorized:false}` (sudah). |
 | `401 Belum login` terus | Token kadaluarsa (8 jam) → login ulang di `login.html`. Pastikan `ADMIN_SECRET` sama saat login dan saat verifikasi (jangan ganti di tengah sesi tanpa redeploy). |
