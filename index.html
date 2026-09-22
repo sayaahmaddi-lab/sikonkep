@@ -3,73 +3,410 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SiKonKep — Dinas Kominfo Aceh Tengah</title>
+<title>SiKonKep — Sistem Daftar Kepentingan Pribadi | Diskominfo Aceh Tengah</title>
+<meta name="description" content="SiKonKep - Aplikasi Formulir Daftar Kepentingan Pribadi untuk pencegahan Konflik Kepentingan ASN di lingkungan Dinas Komunikasi dan Informatika Kabupaten Aceh Tengah.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <style>
-  :root { --biru:#0f2438; --biru2:#1c3a57; --hijau:#1c7c3c; }
-  * { box-sizing:border-box; }
-  body {
-    margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
-    background:linear-gradient(135deg,#0f2438 0%,#1c3a57 60%,#2a4e73 100%);
-    font-family:"Segoe UI",Arial,sans-serif; color:#111;
+  :root{
+    --biru-900:#0b1d2f;
+    --biru-800:#0f2438;
+    --biru-700:#163553;
+    --biru-600:#1c3a57;
+    --biru-500:#2a4e73;
+    --biru-50:#eef4fb;
+    --hijau-600:#15803d;
+    --hijau-500:#16a34a;
+    --hijau-50:#f0fdf4;
+    --slate-50:#f8fafc;
+    --slate-100:#f1f5f9;
+    --slate-200:#e2e8f0;
+    --slate-400:#94a3b8;
+    --slate-600:#475569;
+    --slate-800:#1e293b;
+    --white:#ffffff;
+    --radius:14px;
+    --shadow:0 10px 30px rgba(15,36,56,.12);
+    --shadow-lg:0 20px 60px rgba(15,36,56,.18);
   }
-  .kartu {
-    width:520px; max-width:94vw; background:#fff; border-radius:14px; padding:30px 28px;
-    box-shadow:0 14px 40px rgba(0,0,0,.35); text-align:center;
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--slate-50);
+    color: var(--slate-800);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
   }
-  .kartu h1 { margin:0 0 4px; font-size:22px; color:var(--biru); }
-  .kartu .sub { margin:0 0 18px; font-size:12.5px; color:#567; line-height:1.5 }
-  .badge-online { display:inline-block; background:#e7f3ec; color:#1c7c3c; border:1px solid #b6dfc2; padding:4px 10px; border-radius:999px; font-size:11px; font-weight:700; margin-bottom:14px }
-  .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:14px 0 10px }
-  .btn {
-    display:flex; align-items:center; justify-content:center; gap:8px;
-    padding:13px 16px; border-radius:10px; font-size:14px; font-weight:700;
-    color:#fff !important; text-decoration:none; border:none; cursor:pointer;
+  a{color:inherit; text-decoration:none}
+  .container{max-width:1120px; margin:0 auto; padding:0 20px}
+
+  /* NAV */
+  .nav{
+    position:sticky; top:0; z-index:40;
+    backdrop-filter:saturate(180%) blur(16px);
+    background: rgba(255,255,255,.82);
+    border-bottom:1px solid var(--slate-200);
   }
-  .btn.utama { background:var(--hijau); grid-column:1 / -1; font-size:15px; padding:15px }
-  .btn.utama:hover { background:#229049; }
-  .btn.biru { background:var(--biru2); }
-  .btn.biru:hover { background:#244a6e; }
-  .btn.ghost { background:#eef2f6; color:var(--biru) !important; border:1px solid #d7dee6 }
-  .info { text-align:left; font-size:12.5px; line-height:1.6; color:#334; margin:16px auto 0; padding:12px 14px; background:#f2f6fa; border-radius:8px; }
-  .info code { background:#e2e9f1; padding:1px 6px; border-radius:4px; font-size:11.5px; }
-  .warn { margin-top:12px; font-size:11.5px; color:#7f2b2b; background:#fdeaea; border:1px solid #f3c6c6; padding:10px 12px; border-radius:8px; text-align:left; }
-  ul { margin:6px 0 0 18px; padding:0; }
-  .foot { margin-top:14px; font-size:11px; color:#789 }
-  .foot a { color:var(--biru2) }
+  .nav-inner{
+    display:flex; align-items:center; justify-content:space-between;
+    height:68px;
+  }
+  .brand{display:flex; align-items:center; gap:12px; font-weight:800; letter-spacing:-.02em}
+  .brand-logo{
+    width:40px; height:40px; border-radius:10px;
+    background: linear-gradient(135deg,var(--biru-800), var(--biru-500));
+    display:grid; place-items:center; color:white; font-weight:800; font-size:18px;
+    box-shadow: 0 6px 18px rgba(15,36,56,.25);
+  }
+  .brand-text small{display:block; font-weight:600; font-size:11px; letter-spacing:.08em; color:var(--slate-600); text-transform:uppercase; margin-top:-2px}
+  .brand-text span{font-size:17px; color:var(--biru-800)}
+  .nav-links{display:flex; align-items:center; gap:28px; font-size:14px; font-weight:500; color:var(--slate-600)}
+  .nav-links a:hover{color:var(--biru-800)}
+  .nav-cta{display:flex; gap:10px; align-items:center}
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    padding:10px 18px; border-radius:999px; font-weight:700; font-size:14px;
+    border:1px solid transparent; cursor:pointer; transition:.18s;
+    white-space:nowrap;
+  }
+  .btn-primary{background:var(--biru-800); color:white; box-shadow:0 8px 20px rgba(15,36,56,.18)}
+  .btn-primary:hover{background:var(--biru-700); transform:translateY(-1px)}
+  .btn-ghost{background:white; border-color:var(--slate-200); color:var(--slate-800)}
+  .btn-ghost:hover{border-color:var(--biru-800); color:var(--biru-800)}
+  .btn-green{background:var(--hijau-600); color:white; box-shadow:0 8px 20px rgba(21,128,61,.22)}
+  .btn-green:hover{background:#166534; transform:translateY(-1px)}
+  .btn-lg{padding:14px 26px; font-size:15.5px}
+  .hamburger{display:none; background:none; border:none; font-size:22px; cursor:pointer}
+
+  /* HERO */
+  .hero{
+    position:relative; overflow:hidden;
+    background: radial-gradient(1200px 600px at 20% -10%, #1e4978 0%, var(--biru-800) 42%, var(--biru-900) 100%);
+    color:white;
+  }
+  .hero::before{
+    content:""; position:absolute; inset:0;
+    background:
+      radial-gradient(600px 300px at 80% 20%, rgba(22,163,74,.22) 0%, transparent 60%),
+      linear-gradient(180deg, rgba(255,255,255,.06) 0%, transparent 100%);
+    pointer-events:none;
+  }
+  .hero-inner{
+    position:relative; z-index:1;
+    display:grid; grid-template-columns: 1.1fr .9fr;
+    gap:40px; align-items:center;
+    padding:72px 0 64px;
+  }
+  .badge{
+    display:inline-flex; align-items:center; gap:8px;
+    background: rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.18);
+    padding:6px 12px; border-radius:999px; font-size:12px; font-weight:600; letter-spacing:.02em;
+    backdrop-filter: blur(8px);
+  }
+  .badge .dot{width:8px; height:8px; border-radius:50%; background:#22c55e; box-shadow:0 0 0 4px rgba(34,197,94,.25)}
+  .hero h1{
+    margin:18px 0 14px; font-size:44px; line-height:1.08; letter-spacing:-.03em; font-weight:900;
+  }
+  .hero h1 span{color:#86efac}
+  .hero p.lead{font-size:17.5px; line-height:1.65; color:#cbd5e1; max-width:560px; margin:0 0 28px}
+  .hero-actions{display:flex; gap:12px; flex-wrap:wrap; margin-bottom:22px}
+  .hero-meta{display:flex; gap:18px; flex-wrap:wrap; font-size:13px; color:#9fb3c8}
+  .hero-meta b{color:#e2e8f0}
+  .hero-card{
+    background: white; border-radius:20px; padding:18px;
+    box-shadow: var(--shadow-lg);
+    color: var(--slate-800);
+    transform: rotate(-1deg);
+  }
+  .hero-card-inner{
+    border:1px solid var(--slate-200); border-radius:14px; overflow:hidden;
+    background: linear-gradient(180deg, #fff, #f8fafc);
+  }
+  .card-top{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 16px; background:#f8fafc; border-bottom:1px solid var(--slate-200);
+    font-size:12px; font-weight:700; color:var(--slate-600); letter-spacing:.04em; text-transform:uppercase;
+  }
+  .card-top .dots{display:flex; gap:6px}
+  .card-top .dots i{width:8px; height:8px; border-radius:50%; display:block}
+  .mock{padding:16px}
+  .mock-row{display:flex; gap:12px; margin-bottom:12px}
+  .mock-label{width:88px; font-size:11px; font-weight:700; color:var(--slate-400); text-transform:uppercase; padding-top:6px}
+  .mock-input{flex:1; height:34px; border-radius:8px; background:var(--slate-100); border:1px dashed var(--slate-200)}
+  .mock-input.wide{height:72px}
+  .mock-check{display:flex; gap:8px; align-items:center; font-size:12px; color:var(--slate-600); margin-top:8px}
+  .mock-check span{width:18px; height:18px; border-radius:6px; border:1.5px solid var(--slate-200); display:grid; place-items:center; background:white}
+  .mock-sig{margin-top:14px; border:1.5px dashed #a7f3d0; background:var(--hijau-50); border-radius:12px; height:84px; display:grid; place-items:center; color:var(--hijau-600); font-size:12px; font-weight:700}
+  .hero-card-foot{padding:12px 16px; display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--slate-600)}
+  .hero-card-foot b{color:var(--slate-800)}
+
+  /* TRUST */
+  .trust{border-bottom:1px solid var(--slate-200); background:white}
+  .trust-inner{display:flex; gap:24px; align-items:center; justify-content:space-between; padding:14px 0; flex-wrap:wrap; font-size:13px; color:var(--slate-600)}
+  .trust-logos{display:flex; gap:18px; align-items:center; flex-wrap:wrap; opacity:.9}
+  .trust-logos span{font-weight:800; letter-spacing:.08em; text-transform:uppercase; font-size:11px; background:var(--slate-100); padding:6px 10px; border-radius:999px; border:1px solid var(--slate-200)}
+
+  /* FEATURES */
+  .section{padding:72px 0}
+  .section-head{max-width:640px; margin:0 auto 36px; text-align:center}
+  .eyebrow{display:inline-block; font-size:11px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--biru-600); background:var(--biru-50); border:1px solid #cbd9ea; padding:5px 10px; border-radius:999px; margin-bottom:12px}
+  .section-head h2{margin:0 0 10px; font-size:32px; line-height:1.15; letter-spacing:-.02em; font-weight:900; color:var(--biru-900)}
+  .section-head p{margin:0; color:var(--slate-600); font-size:15.5px}
+  .features{display:grid; grid-template-columns:repeat(3,1fr); gap:18px}
+  .feat{background:white; border:1px solid var(--slate-200); border-radius:16px; padding:22px; box-shadow: var(--shadow); transition:.18s}
+  .feat:hover{transform:translateY(-3px); box-shadow:var(--shadow-lg)}
+  .feat-icon{width:44px; height:44px; border-radius:12px; display:grid; place-items:center; font-size:22px; margin-bottom:14px}
+  .feat h3{margin:0 0 6px; font-size:16px; font-weight:800; letter-spacing:-.01em}
+  .feat p{margin:0; font-size:14px; color:var(--slate-600); line-height:1.6}
+
+  /* STEPS */
+  .steps{background:white; border-top:1px solid var(--slate-200); border-bottom:1px solid var(--slate-200)}
+  .steps-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:20px; counter-reset:step}
+  .step{position:relative; padding:20px; border-radius:16px; background:var(--slate-50); border:1px solid var(--slate-200)}
+  .step::before{counter-increment:step; content:counter(step); width:28px; height:28px; border-radius:999px; background:var(--biru-800); color:white; display:grid; place-items:center; font-weight:800; font-size:13px; margin-bottom:12px}
+  .step h4{margin:0 0 6px; font-size:14.5px; font-weight:800}
+  .step p{margin:0; font-size:13.5px; color:var(--slate-600)}
+
+  /* CTA */
+  .cta{
+    background: linear-gradient(135deg, var(--biru-800), var(--biru-600));
+    color:white; border-radius:24px; padding:36px; display:flex; align-items:center; justify-content:space-between; gap:20px;
+    box-shadow: var(--shadow-lg);
+  }
+  .cta h3{margin:0 0 6px; font-size:24px; letter-spacing:-.02em}
+  .cta p{margin:0; color:#cbd5e1; font-size:14.5px; max-width:520px}
+  .cta-actions{display:flex; gap:10px; flex-wrap:wrap}
+
+  /* FOOTER */
+  .footer{background:var(--biru-900); color:#9fb3c8; padding:36px 0 24px; margin-top:64px; font-size:13.5px}
+  .footer-grid{display:grid; grid-template-columns:1.4fr .8fr .8fr; gap:28px; margin-bottom:24px}
+  .footer h4{color:white; margin:0 0 10px; font-size:14px; font-weight:800; letter-spacing:-.01em}
+  .footer a{color:#cbd5e1}
+  .footer a:hover{color:white; text-decoration:underline}
+  .footer-bottom{border-top:1px solid rgba(255,255,255,.1); padding-top:16px; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; font-size:12px}
+  .mono{font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size:12px}
+
+  /* Responsive */
+  @media(max-width:960px){
+    .hero-inner{grid-template-columns:1fr; padding:36px 0 28px}
+    .hero h1{font-size:36px}
+    .hero-card{transform:none; max-width:520px}
+    .features{grid-template-columns:1fr 1fr}
+    .steps-grid{grid-template-columns:1fr 1fr}
+    .footer-grid{grid-template-columns:1fr 1fr}
+    .nav-links{display:none}
+    .hamburger{display:block}
+  }
+  @media(max-width:640px){
+    .features{grid-template-columns:1fr}
+    .steps-grid{grid-template-columns:1fr}
+    .cta{flex-direction:column; align-items:flex-start; padding:24px}
+    .hero h1{font-size:30px}
+    .footer-grid{grid-template-columns:1fr}
+  }
 </style>
 </head>
 <body>
-  <div class="kartu">
-    <div class="badge-online">● ONLINE — Vercel + Neon aktif</div>
-    <h1>SiKonKep</h1>
-    <p class="sub">Formulir Daftar Kepentingan Pribadi<br>Dinas Komunikasi dan Informatika Kab. Aceh Tengah</p>
 
-    <div class="grid">
-      <a class="btn utama" href="formulir-daftar-kepentingan-pribadi.html">📝 Isi Formulir Online</a>
-      <a class="btn biru" href="login.html">🔐 Login Admin</a>
-      <a class="btn biru" href="admin.html">📊 Dashboard Admin</a>
-      <a class="btn ghost" href="formulir-daftar-kepentingan-pribadi.html" target="_blank" style="grid-column:1 / -1">👁 Pratinjau Formulir (tab baru)</a>
+<nav class="nav">
+  <div class="container nav-inner">
+    <a class="brand" href="#">
+      <div class="brand-logo">SK</div>
+      <div class="brand-text">
+        <span>SiKonKep</span>
+        <small>Diskominfo Aceh Tengah</small>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="#fitur">Fitur</a>
+      <a href="#alur">Alur</a>
+      <a href="formulir-daftar-kepentingan-pribadi.html">Formulir</a>
+      <a href="login.html">Admin</a>
     </div>
-
-    <div class="info">
-      <b>Versi Online (Vercel + Neon):</b>
-      <ul>
-        <li>Tombol di atas langsung simpan ke database <code>Neon PostgreSQL</code></li>
-        <li>Login admin pakai <code>ADMIN_USER</code> / <code>ADMIN_PASS</code> di Vercel</li>
-        <li>Tidak perlu XAMPP — cukup buka link Vercel</li>
-      </ul>
+    <div class="nav-cta">
+      <a class="btn btn-ghost" href="login.html">🔐 Login Admin</a>
+      <a class="btn btn-primary" href="formulir-daftar-kepentingan-pribadi.html">Isi Formulir</a>
+      <button class="hamburger" aria-label="menu" onclick="document.getElementById('mob').style.display = document.getElementById('mob').style.display==='flex'?'none':'flex'">☰</button>
     </div>
-
-    <div class="info" style="background:#fff; border:1px solid #e2e8f0">
-      <b>Butuh versi XAMPP (offline)?</b><br>
-      <a class="btn ghost" href="sikonkep-localhost.zip" download style="margin-top:8px; width:100%">⬇ Unduh sikonkep-localhost.zip</a>
-      <ul>
-        <li>Untuk intranet kantor tanpa internet</li>
-        <li>Isi: <code>backend/</code> PHP + <code>schema.sql</code> MySQL</li>
-      </ul>
-    </div>
-
-    <p class="foot">Halaman utama: <code>/</code> → menu ini. Formulir: <code>/formulir-daftar-kepentingan-pribadi.html</code> &nbsp;|&nbsp; Admin: <code>/login.html</code></p>
   </div>
+  <div id="mob" style="display:none; flex-direction:column; gap:8px; padding:12px 20px 16px; border-top:1px solid var(--slate-200); background:white">
+    <a href="#fitur">Fitur</a>
+    <a href="#alur">Alur Pengisian</a>
+    <a href="formulir-daftar-kepentingan-pribadi.html">📝 Formulir Online</a>
+    <a href="login.html">🔐 Login Admin</a>
+    <a href="admin.html">📊 Dashboard Admin</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container hero-inner">
+    <div>
+      <div class="badge"><span class="dot"></span> ONLINE — Vercel + Neon PostgreSQL • Aman & Terenkripsi</div>
+      <h1>Formulir Daftar<br>Kepentingan Pribadi<br><span>Digital & Terverifikasi</span></h1>
+      <p class="lead">SiKonKep memudahkan ASN Dinas Komunikasi dan Informatika Kabupaten Aceh Tengah mengisi, menandatangani, dan melaporkan potensi Konflik Kepentingan secara transparan, cepat, dan akuntabel.</p>
+      <div class="hero-actions">
+        <a class="btn btn-green btn-lg" href="formulir-daftar-kepentingan-pribadi.html">📝 Isi Formulir Sekarang →</a>
+        <a class="btn btn-ghost btn-lg" style="background:rgba(255,255,255,.1); color:white; border-color:rgba(255,255,255,.25)" href="#fitur">Pelajari Fitur</a>
+      </div>
+      <div class="hero-meta">
+        <div>✓ <b>Tanda tangan digital</b> mouse & touch</div>
+        <div>✓ <b>Auto-save</b> di browser</div>
+        <div>✓ <b>Export CSV</b> & status tracking</div>
+      </div>
+    </div>
+
+    <div class="hero-card">
+      <div class="hero-card-inner">
+        <div class="card-top">
+          <span>Pratinjau Formulir — A. Hubungan Keluarga</span>
+          <span class="dots"><i style="background:#ff5f57"></i><i style="background:#ffbd2e"></i><i style="background:#28ca42"></i></span>
+        </div>
+        <div class="mock">
+          <div class="mock-row"><div class="mock-label">Nama</div><div class="mock-input"></div></div>
+          <div class="mock-row"><div class="mock-label">NIP</div><div class="mock-input" style="max-width:68%"></div></div>
+          <div class="mock-row"><div class="mock-label">Jabatan</div><div class="mock-input"></div></div>
+          <div class="mock-row"><div class="mock-label">Tabel A</div><div class="mock-input wide"></div></div>
+          <div class="mock-check"><span>✓</span> Saya menyatakan data di atas benar & dapat dipertanggungjawabkan</div>
+          <div class="mock-sig">✍️ Area Tanda Tangan Digital — gambar di sini</div>
+        </div>
+        <div class="hero-card-foot">
+          <span>🔒 Enkripsi • <b>PostgreSQL Neon</b></span>
+          <span class="mono">ID # — auto</span>
+        </div>
+      </div>
+      <div style="display:flex; gap:10px; margin-top:14px">
+        <div style="flex:1; background:var(--slate-100); border:1px solid var(--slate-200); border-radius:12px; padding:10px 12px; font-size:12px"><b style="display:block; font-size:18px">1.2k+</b><span style="color:var(--slate-600)">Formulir terkelola (simulasi)</span></div>
+        <div style="flex:1; background:var(--hijau-50); border:1px solid #bbf7d0; border-radius:12px; padding:10px 12px; font-size:12px"><b style="display:block; font-size:18px; color:var(--hijau-600)">8 jam</b><span style="color:#166534">Masa berlaku sesi admin</span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="trust">
+  <div class="container trust-inner">
+    <div><b style="color:var(--biru-800)">Pemerintah Kabupaten Aceh Tengah</b> • Dinas Komunikasi dan Informatika • Integritas • Transparansi • Akuntabilitas</div>
+    <div class="trust-logos">
+      <span>ISO 27001 Ready</span>
+      <span>Neon PostgreSQL</span>
+      <span>Vercel Edge</span>
+    </div>
+  </div>
+</div>
+
+<section id="fitur" class="section">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">Fitur Utama</div>
+      <h2>Dibuat untuk ASN, dioptimalkan untuk integritas</h2>
+      <p>Semua yang dibutuhkan untuk pelaporan kepentingan pribadi: dari pengisian hingga rekap admin, dalam satu aplikasi ringan tanpa XAMPP.</p>
+    </div>
+    <div class="features">
+      <div class="feat">
+        <div class="feat-icon" style="background:var(--biru-50); border:1px solid #cbd9ea">📝</div>
+        <h3>Formulir Digital Lengkap A–F</h3>
+        <p>Identitas, hubungan keluarga, bisnis, pekerjaan lain, rangkap jabatan, afiliasi, hingga rencana pasca pensiun — sesuai format resmi.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon" style="background:var(--hijau-50); border:1px solid #bbf7d0">✍️</div>
+        <h3>Tanda Tangan Digital Halus</h3>
+        <p>Canvas 2x retina, undo, hapus, auto-save ke browser. Disimpan sebagai PNG base64 dan ikut tercetak rapi A4.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon" style="background:#fef9c3; border:1px solid #fde68a">☁️</div>
+        <h3>Simpan Otomatis & Offline-Tolerant</h3>
+        <p>Isian tersimpan di localStorage agar tidak hilang. Tombol “Simpan ke Database” kirim ke Neon (online) atau MySQL (localhost) otomatis.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon" style="background:#f3e8ff; border:1px solid #e9d5ff">🔐</div>
+        <h3>Admin Aman dengan JWT</h3>
+        <p>Login admin pakai ENV Vercel, token JWT 8 jam, filter status, detail JSON, update status, dan export CSV dengan BOM UTF-8.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon" style="background:#ffedd5; border:1px solid #fed7aa">🖨️</div>
+        <h3>Cetak Rapi A4</h3>
+        <p>Layout print-friendly, kop dinas, tabel auto-resize, tanda tangan tetap terbaca. Siap arsip atau PDF.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon" style="background:#e0f2fe; border:1px solid #bae6fd">⚡</div>
+        <h3>Deploy 1-Menit di Vercel</h3>
+        <p>Tanpa server. Cukup set DATABASE_URL, ADMIN_USER, ADMIN_PASS, ADMIN_SECRET lalu deploy. Sudah termasuk CORS & rewrites.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="alur" class="section steps">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">Alur Kerja</div>
+      <h2>3 langkah selesai, data langsung masuk rekap</h2>
+      <p>Dirancang agar pegawai tidak bingung, admin tidak repot.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step"><h4>Buka Formulir</h4><p>Klik “Isi Formulir” — tidak perlu login. Isi Nama, NIP, pangkat, jabatan, dan bagian A–F.</p></div>
+      <div class="step"><h4>Tanda Tangan & Periksa</h4><p>Gambar tanda tangan dengan mouse / jari, cek kembali, data auto-save di browser jika terputus.</p></div>
+      <div class="step"><h4>Simpan ke Database</h4><p>Klik “Simpan ke Database” — sistem kirim ke Neon PostgreSQL dan beri ID. Toast konfirmasi muncul.</p></div>
+      <div class="step"><h4>Admin Verifikasi</h4><p>Admin login di /login → /admin → lihat detail, ubah status BARU→DIPROSES→SELESAI, export CSV.</p></div>
+    </div>
+
+    <div style="margin-top:28px" class="cta">
+      <div>
+        <h3>Siap mengisi sekarang?</h3>
+        <p>Butuh waktu ±5–7 menit. Pastikan Nama dan NIP terisi, lalu simpan. Admin akan menindaklanjuti status laporan Anda.</p>
+      </div>
+      <div class="cta-actions">
+        <a class="btn btn-green btn-lg" href="formulir-daftar-kepentingan-pribadi.html">📝 Isi Formulir Online</a>
+        <a class="btn btn-ghost btn-lg" style="background:white; color:var(--biru-800)" href="login.html">🔐 Masuk Admin</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px">
+          <div class="brand-logo" style="width:36px; height:36px; font-size:16px">SK</div>
+          <div><b style="color:white; display:block">SiKonKep</b><small style="color:#94a3b8">Sistem Konflik Kepentingan</small></div>
+        </div>
+        <p style="margin:0; max-width:420px">Aplikasi Formulir Daftar Kepentingan Pribadi untuk pencegahan Konflik Kepentingan ASN. Dibangun untuk Dinas Komunikasi dan Informatika Kabupaten Aceh Tengah — versi online Vercel + Neon PostgreSQL.</p>
+        <div style="margin-top:14px; display:flex; gap:8px; flex-wrap:wrap">
+          <span class="mono" style="background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14); padding:5px 10px; border-radius:999px">/formulir-daftar-kepentingan-pribadi.html</span>
+          <span class="mono" style="background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14); padding:5px 10px; border-radius:999px">/api/simpan</span>
+        </div>
+      </div>
+      <div>
+        <h4>Navigasi</h4>
+        <div style="display:flex; flex-direction:column; gap:6px">
+          <a href="formulir-daftar-kepentingan-pribadi.html">Formulir Online</a>
+          <a href="login.html">Login Admin</a>
+          <a href="admin.html">Dashboard Admin</a>
+          <a href="#fitur">Fitur</a>
+          <a href="#alur">Alur Kerja</a>
+        </div>
+      </div>
+      <div>
+        <h4>Bantuan & Offline</h4>
+        <div style="display:flex; flex-direction:column; gap:6px">
+          <a href="PANDUAN.md" target="_blank">📖 Panduan Lengkap</a>
+          <a href="README.md" target="_blank">README</a>
+          <a href="sikonkep-localhost.zip" download>⬇ Versi XAMPP (zip)</a>
+          <span style="font-size:11px; color:#64748b; margin-top:6px">Untuk intranet tanpa internet, gunakan paket XAMPP (backend PHP + MySQL).</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2025–2026 Dinas Komunikasi dan Informatika Kab. Aceh Tengah • Dibuat dengan integritas untuk pencegahan konflik kepentingan.</div>
+      <div>Halaman utama: <span class="mono">/</span> • Formulir: <span class="mono">/formulir-daftar-kepentingan-pribadi.html</span> • Admin: <span class="mono">/login.html</span></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// tiny analytics-free pageview
+console.log('SiKonKep landing v2 loaded');
+</script>
 </body>
 </html>
