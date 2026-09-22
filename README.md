@@ -11,7 +11,7 @@ Konflik Kepentingan) secara digital, lengkap dengan **tanda tangan digital**
 - Simpan otomatis di browser (localStorage) agar isian tidak hilang.
 - Cetak / Simpan PDF dengan tata letak rapi ukuran A4.
 - Simpan ke database (Neon PostgreSQL bila online, MySQL bila XAMPP) via tombol "Simpan ke Database".
-- Halaman admin: rekap data, detail isian, ubah status, export CSV — **wajib login**.
+- Halaman admin: rekap data, **lembar isian persis formulir aslinya** (read-only, lengkap tanda tangan, siap cetak/PDF), ubah status & catatan, export CSV — **wajib login**.
 - **Dua mode deployment** dalam satu repo:
   - **Lokal (XAMPP)**: `backend/` (PHP + MySQL)
   - **Online (Vercel + Neon)**: `api/` (Node.js) + `neon-schema.sql` + `login.html`/`admin.html`
@@ -39,7 +39,7 @@ Konflik Kepentingan) secara digital, lengkap dengan **tanda tangan digital**
 ## Cara Pakai — Ringkas
 
 ### Opsi A — Online (Vercel + Neon) — disarankan untuk publik
-1. Buat project di **Neon** (neon.tech) → copy `DATABASE_URL` → jalankan `neon-schema.sql` di SQL Editor Neon.
+1. Buat project di **Neon** (neon.tech) → copy `DATABASE_URL` → **jalankan `neon-schema.sql` di SQL Editor Neon** (wajib! Bila terlewat muncul error `relation "pengisian" does not exist`; alternatif: `npm run setup-db`).
 2. Import repo ke **Vercel** → atur Environment Variables: `DATABASE_URL`, `ADMIN_USER`, `ADMIN_PASS`, `ADMIN_SECRET`.
 3. Deploy → buka `https://namaproject.vercel.app/formulir-daftar-kepentingan-pribadi.html` untuk mengisi, `.../login.html` untuk admin.
 

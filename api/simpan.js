@@ -84,8 +84,14 @@ module.exports = async (req, res) => {
     return json(res, 200, { ok: true, message: 'Data berhasil disimpan.', id });
   } catch (e) {
     console.error('simpan error', e);
-    const msg = (e.message || '').includes('DATABASE_URL') ? e.message
-      : 'Gagal menyimpan: ' + (e.message || 'unknown');
+    let msg;
+    if (e.code === '42P01' || /relation .* does not exist/i.test(e.message || '')) {
+      msg = 'Tabel "pengisian" belum ada di database Neon. Buka Neon → SQL Editor → jalankan isi file neon-schema.sql (lihat PANDUAN.md langkah A1 poin 4), atau jalankan perintah: npm run setup-db. Setelah itu coba simpan ulang.';
+    } else if ((e.message || '').includes('DATABASE_URL')) {
+      msg = e.message;
+    } else {
+      msg = 'Gagal menyimpan: ' + (e.message || 'unknown');
+    }
     return json(res, 500, { ok: false, message: msg });
   }
 };

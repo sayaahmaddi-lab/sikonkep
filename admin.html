@@ -96,7 +96,7 @@
   <div id="toast" class="toast"></div>
 <script>
 const API_LIST = '/api/admin?action=list';
-const API_GET  = id => `/api/admin?action=get&id=${id}`;
+const API_LEMBAR = id => 'formulir-daftar-kepentingan-pribadi.html?lihat=' + encodeURIComponent(id);
 const API_STATUS = '/api/admin?action=status';
 const API_EXPORT = '/api/admin?action=export';
 const API_ME = '/api/admin?action=me';
@@ -201,7 +201,10 @@ function render(){
       <td class="jempol">${r.ttd && r.ttd.startsWith('data:image/') ? `<img src="${esc(r.ttd)}" alt="ttd">` : '<span style="color:#aaa">-</span>'}</td>
       <td>${badge(r.status)}<br><small style="color:#667">${esc(r.catatan_admin||'')}</small></td>
       <td>${fmtTanggal(r.created_at)}</td>
-      <td><button class="btn" style="padding:6px 10px" onclick="buka(${r.id})">Lihat</button></td>
+      <td style="white-space:nowrap">
+        <button class="btn" style="padding:6px 10px" title="Buka lembar formulir persis seperti aslinya" onclick="buka(${r.id})">📄 Lihat</button>
+        <button class="btn" style="padding:6px 10px;background:#64748b" title="Ubah status & catatan" onclick="proses(${r.id})">⚙ Status</button>
+      </td>
     </tr>`;
   }
   html+='</tbody></table>';
@@ -209,43 +212,31 @@ function render(){
 }
 function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-async function buka(id){
-  try{
-    const r=await fetch(API_GET(id), { headers:{Authorization:'Bearer '+getToken()}});
-    const j=await r.json();
-    if(!j.ok) throw new Error(j.message);
-    const d=j.data; modalId=d.id;
-    document.getElementById('mJudul').textContent=`#${d.id} — ${d.nama} (${d.nip})`;
-    const box=document.getElementById('mIsi');
-    const det = [
-      ['Nama', d.nama], ['NIP', d.nip], ['Pangkat', d.pangkat], ['Jabatan', d.jabatan],
-      ['Perangkat Daerah', d.perangkat], ['Unit Kerja', d.unit_kerja], ['Tanggal Isi', d.tanggal_isi],
-      ['Status', d.status], ['Catatan Admin', d.catatan_admin], ['Dikirim', fmtTanggal(d.created_at)],
-      ['Nama TTD', d.ttd_nama], ['NIP TTD', d.ttd_nip],
-    ];
-    const jsonView = (title, val)=>{
-      if(!val) return `<div class="full"><b>${title}</b><br><span style="color:#888">-</span></div>`;
-      try{
-        const o=JSON.parse(val);
-        const pretty=JSON.stringify(o,null,2);
-        return `<div class="full"><b>${title}</b><pre style="background:#f8fafc;border:1px solid #e2e8f0;padding:8px;border-radius:6px;overflow:auto;max-height:160px;white-space:pre-wrap;word-break:break-word;font-size:11.5px">${esc(pretty)}</pre></div>`;
-      }catch{ return `<div class="full"><b>${title}</b><br>${esc(val)}</div>`; }
-    };
-    let html='';
-    det.forEach(([k,v])=> html+=`<div><b>${k}</b><br>${esc(v||'-')}</div>`);
-    html+= jsonView('Bagian A', d.bagian_a);
-    html+= jsonView('Bagian B', d.bagian_b);
-    html+= jsonView('Bagian C', d.bagian_c);
-    html+= jsonView('Bagian D', d.bagian_d);
-    html+= jsonView('Bagian E', d.bagian_e);
-    html+= jsonView('Bagian F', d.bagian_f);
-    if(d.ttd && d.ttd.startsWith('data:image/'))
-      html+=`<div class="full"><b>Tanda tangan</b><br><img src="${esc(d.ttd)}" style="max-width:360px;border:1px solid #ccc;border-radius:6px;background:#fff"></div>`;
-    box.innerHTML=html;
-    document.getElementById('mStatus').value=d.status;
-    document.getElementById('mCatatan').value=d.catatan_admin||'';
-    document.getElementById('modal').classList.add('show');
-  }catch(e){ toast('Gagal membuka detail: '+e.message); }
+// Tombol "Lihat": buka lembar formulir persis seperti aslinya (read-only,
+// lengkap dengan tanda tangan) di tab baru — datanya diambil dari database.
+function buka(id){
+  window.open(API_LEMBAR(id), '_blank');
+}
+
+// Tombol "Status": panel ringkas untuk mengubah status & catatan admin.
+function proses(id){
+  const d = DATA.find(x => x.id === id || String(x.id) === String(id));
+  if(!d){ toast('Data tidak ditemukan — coba Muat ulang.'); return; }
+  modalId = d.id;
+  document.getElementById('mJudul').textContent = `#${d.id} — ${d.nama} (${d.nip})`;
+  document.getElementById('mIsi').innerHTML = `
+    <div><b>Jabatan</b><br>${esc(d.jabatan||'-')}</div>
+    <div><b>Tanggal Isi</b><br>${esc(d.tanggal_isi||'-')}</div>
+    <div><b>Perangkat Daerah</b><br>${esc(d.perangkat||'-')}</div>
+    <div><b>Unit Kerja</b><br>${esc(d.unit_kerja||'-')}</div>
+    <div><b>Dikirim</b><br>${fmtTanggal(d.created_at)}</div>
+    <div><b>Tanda Tangan</b><br>${d.ttd && String(d.ttd).startsWith('data:image/') ? 'Ada ✔' : '-'}</div>
+    <div class="full" style="margin-top:2px">
+      <a href="${API_LEMBAR(d.id)}" target="_blank" style="color:var(--biru2);font-weight:600">📄 Buka lembar formulir lengkap (dengan tanda tangan) ↗</a>
+    </div>`;
+  document.getElementById('mStatus').value = d.status;
+  document.getElementById('mCatatan').value = d.catatan_admin || '';
+  document.getElementById('modal').classList.add('show');
 }
 function tutupModal(){ document.getElementById('modal').classList.remove('show'); modalId=null; }
 
