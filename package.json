@@ -11,6 +11,7 @@
     "pg": "^8.12.0"
   },
   "scripts": {
-    "dev": "vercel dev"
+    "dev": "vercel dev",
+    "setup-db": "node scripts/setup-db.mjs"
   }
 }

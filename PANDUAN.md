@@ -53,9 +53,12 @@ sikonkep/
    postgresql://user:password@ep-xxx.neon.tech/neondb?sslmode=require
    ```
    Simpan sebagai `DATABASE_URL`.
-4. Buka **SQL Editor** di Neon → klik **New Query** → tempel seluruh isi file `neon-schema.sql` → **Run**.
+4. Buka **SQL Editor** di Neon → klik **New Query** → tempel seluruh isi file `neon-schema.sql** → **Run**.
    - Harus muncul `CREATE TABLE` sukses. Cek di **Tables** → `pengisian` sudah ada.
-   - Alternatif via CLI: `psql "$DATABASE_URL" -f neon-schema.sql`
+   - Alternatif via CLI: `psql "$DATABASE_URL" -f neon-schema.sql` atau `npm run setup-db` (membaca `DATABASE_URL` dari `.env`).
+
+> ⚠️ **LANGKAH INI PALING SERING TERLEWAT!** Jika dilewati, tombol *"Simpan ke Database"* akan gagal dengan pesan `relation "pengisian" does not exist`.
+> Pastikan juga skrip dijalankan di **project/database yang sama** dengan `DATABASE_URL` yang dipasang di Vercel.
 
 ### A2. Siapkan kredensial admin online
 

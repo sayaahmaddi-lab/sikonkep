@@ -18,7 +18,53 @@ function getPool() {
   return pool;
 }
 
+// ------- Persiapan skema otomatis (idempoten) -------
+// PENTING: harus selalu sama isinya dengan neon-schema.sql.
+// Semua pernyataan memakai IF NOT EXISTS sehingga aman dijalankan berulang.
+// Ini jaring pengaman bila neon-schema.sql lupa dijalankan manual di Neon.
+const SCHEMA_SQL = `
+CREATE TABLE IF NOT EXISTS pengisian (
+  id            SERIAL PRIMARY KEY,
+  nama          VARCHAR(150) NOT NULL DEFAULT '',
+  nip           VARCHAR(50)  NOT NULL DEFAULT '',
+  pangkat       VARCHAR(100) NOT NULL DEFAULT '',
+  jabatan       VARCHAR(150) NOT NULL DEFAULT '',
+  perangkat     VARCHAR(150) NOT NULL DEFAULT '',
+  unit_kerja    VARCHAR(150) NOT NULL DEFAULT '',
+  tanggal_isi   VARCHAR(50)  NOT NULL DEFAULT '',
+  bagian_a      TEXT,
+  bagian_b      TEXT,
+  bagian_c      TEXT,
+  bagian_d      TEXT,
+  bagian_e      TEXT,
+  bagian_f      TEXT,
+  ttd           TEXT,
+  ttd_nama      VARCHAR(150) NOT NULL DEFAULT '',
+  ttd_nip       VARCHAR(50)  NOT NULL DEFAULT '',
+  status        VARCHAR(20)  NOT NULL DEFAULT 'BARU',
+  catatan_admin VARCHAR(255) NOT NULL DEFAULT '',
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_pengisian_nip     ON pengisian (nip);
+CREATE INDEX IF NOT EXISTS idx_pengisian_status  ON pengisian (status);
+CREATE INDEX IF NOT EXISTS idx_pengisian_created ON pengisian (created_at DESC);
+`;
+
+let schemaPromise = null;
+function ensureSchema() {
+  if (!schemaPromise) {
+    schemaPromise = getPool()
+      .query(SCHEMA_SQL) // multi-statement tanpa parameter (simple query)
+      .catch((err) => {
+        schemaPromise = null; // gagal -> coba lagi di request berikutnya
+        throw err;
+      });
+  }
+  return schemaPromise;
+}
+
 async function query(text, params) {
+  await ensureSchema(); // pastikan tabel ada sebelum query apa pun
   const p = getPool();
   return p.query(text, params);
 }
@@ -160,7 +206,7 @@ function json(res, code, obj) {
 }
 
 module.exports = {
-  getPool, query,
+  getPool, query, ensureSchema,
   setCors, handleOptions,
   readJsonBody,
   jwtSign, jwtVerify,
