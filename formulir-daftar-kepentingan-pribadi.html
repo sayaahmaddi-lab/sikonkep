@@ -51,7 +51,7 @@
   .toolbar button:hover { background: #2a4e73; }
   .toolbar button.utama { background: #1c7c3c; border-color: #1c7c3c; }
   .toolbar button.utama:hover { background: #229049; }
-  .toolbar .hint { font-size: 11px; color: #bcd0e6; width: 100%; margin: 2px 0 0; }
+
 
   /* ============================= HALAMAN / KERTAS ============================= */
   .page {
@@ -295,11 +295,7 @@
 <!-- ================= TOOLBAR (tidak ikut tercetak) ================= -->
 <div class="toolbar">
   <span class="brand">Formulir Daftar Kepentingan Pribadi</span>
-  <button type="button" onclick="simpan()">💾 Simpan di Browser</button>
   <button type="button" id="btnKirim" class="utama" onclick="kirimKeServer()">☁️ Simpan ke Database</button>
-  <button type="button" onclick="window.print()">🖨️ Cetak / Simpan PDF</button>
-  <button type="button" onclick="bersihkan()">🗑️ Kosongkan</button>
-  <p class="hint">Isian otomatis tersimpan di browser ini. Untuk PDF: klik "Cetak / Simpan PDF", lalu pilih "Save as PDF". Tombol "Simpan ke Database" mengirim data + tanda tangan ke server (Neon PostgreSQL bila online, MySQL bila XAMPP).</p>
 </div>
 
 <div class="page">
