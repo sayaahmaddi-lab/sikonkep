@@ -72,7 +72,8 @@
     display: inline-block; vertical-align: bottom; margin: 0;
     border: none; border-radius: 0;                               /* tanpa border */
   }
-  body.mode-lihat .ttd .nama-nip input { border-bottom: none; }   /* tanpa garis bawah */
+  body.mode-lihat .ttd .nama-nip input { border-bottom: none; }   /* NIP tanpa garis bawah */
+  body.mode-lihat .ttd .nama-nip input:first-child { text-decoration: underline; }  /* ( nama ) bergaris bawah */
 
 
   /* ============================= HALAMAN / KERTAS ============================= */
@@ -1023,6 +1024,12 @@
       var nipEl = document.querySelector('input[data-key=\"ttd_nip\"]');
       if (nipEl && nipEl.value && !/^NIP\./i.test(nipEl.value.trim())) {
         nipEl.value = 'NIP. ' + nipEl.value;
+      }
+
+      // Nama tampil sebagai "( nama )" (khusus tampilan lembar jadi)
+      var namaEl = document.querySelector('input[data-key=\"ttd_nama\"]');
+      if (namaEl && namaEl.value.trim() && namaEl.value.trim().charAt(0) !== '(') {
+        namaEl.value = '( ' + namaEl.value.trim() + ' )';
       }
 
       // Tanda tangan dari database -> gambar ke kanvas, lalu pangkas ke area goresannya
