@@ -198,51 +198,6 @@
   .info-kartu .tautan::after{content:" →"}
   @media(max-width:860px){.info-grid{grid-template-columns:1fr}}
 
-  /* ============ BERITA & INFORMASI ============ */
-  .berita{background:#fff;padding:64px 0;border-top:1px solid var(--garis)}
-  .berita .kepala{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:34px}
-  .berita .kepala .judul-seksi{text-align:left;margin-bottom:0}
-  .berita .kepala .judul-seksi p{margin:0}
-  .berita .kepala .garis-judul{margin:0 0 12px}
-  .berita .geser{display:flex;gap:8px;flex:none}
-  .berita .geser button{
-    width:34px;height:34px;border-radius:50%;border:1px solid var(--garis);
-    background:#fff;color:var(--biru);cursor:pointer;font-size:15px;transition:all .2s;
-  }
-  .berita .geser button:hover{background:var(--aksen2);border-color:var(--aksen2);color:#fff}
-  .berita .track{
-    display:flex;gap:24px;overflow-x:auto;scroll-snap-type:x mandatory;
-    padding-bottom:8px;scrollbar-width:thin;
-  }
-  .berita article{
-    flex:0 0 min(340px,86vw);scroll-snap-align:start;background:#fff;
-    border:1px solid var(--garis);transition:transform .2s,box-shadow .2s;
-  }
-  .berita article:hover{transform:translateY(-4px);box-shadow:0 12px 26px rgba(20,30,40,.10)}
-  .berita article img{height:180px;width:100%;object-fit:cover}
-  .berita .isi{padding:18px 20px 22px}
-  .berita .tgl{font-size:11.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--aksen);font-weight:700}
-  .berita h3{font-size:15.5px;color:var(--biru);margin:8px 0;font-weight:700;line-height:1.45}
-  .berita p{font-size:13px;color:#77828d}
-
-  /* ============ TAUTAN TERKAIT ============ */
-  .mitra{background:#fff;padding:56px 0;border-top:1px solid var(--garis)}
-  .mitra-grid{display:flex;justify-content:center;gap:20px;flex-wrap:wrap}
-  .mitra a{
-    display:flex;align-items:center;gap:12px;padding:14px 22px;
-    border:1px solid var(--garis);background:#fbfcfd;transition:all .2s;
-  }
-  .mitra a:hover{border-color:var(--aksen2);box-shadow:0 8px 18px rgba(20,30,40,.10);transform:translateY(-3px)}
-  .mitra .inisial{
-    flex:none;width:44px;height:44px;border-radius:50%;
-    background:var(--biru);color:#fff;font-weight:800;font-size:13px;
-    display:flex;align-items:center;justify-content:center;letter-spacing:.5px;
-  }
-  .mitra a:nth-child(2) .inisial{background:var(--aksen)}
-  .mitra a:nth-child(3) .inisial{background:var(--hijau)}
-  .mitra .ket b{display:block;font-size:14px;color:var(--biru)}
-  .mitra .ket small{color:#8a95a0;font-size:11.5px}
-
   /* ============ FOOTER ============ */
   footer{background:#141c26;color:#93a1af;font-size:13px}
   footer .kolom-grid{display:grid;grid-template-columns:2fr 1fr 1.2fr;gap:36px;padding:52px 0 40px}
@@ -296,7 +251,6 @@
         <li><a href="#beranda" class="aktif">Beranda</a></li>
         <li><a href="#fitur">Fitur</a></li>
         <li><a href="#alur">Alur</a></li>
-        <li><a href="#berita">Berita</a></li>
         <li><a href="#panduan">Panduan</a></li>
         <li><a href="formulir-daftar-kepentingan-pribadi.html">Isi Formulir</a></li>
       </ul>
@@ -410,49 +364,6 @@
   </div>
 </section>
 
-<!-- ===== BERITA & INFORMASI ===== -->
-<section class="berita" id="berita">
-  <div class="container">
-    <div class="kepala">
-      <div class="judul-seksi">
-        <h2>Berita &amp; Informasi</h2>
-        <div class="garis-judul"></div>
-        <p>Kabar terbaru seputar penggunaan SiKonKep di lingkungan Pemkab Aceh Tengah.</p>
-      </div>
-      <div class="geser">
-        <button id="brKiri" aria-label="Geser ke kiri">&#10094;</button>
-        <button id="brKanan" aria-label="Geser ke kanan">&#10095;</button>
-      </div>
-    </div>
-    <div class="track" id="brTrack">
-      <article>
-        <img src="assets/berita-sosialisasi.jpg" alt="Suasana sosialisasi pengisian formulir">
-        <div class="isi">
-          <span class="tgl">September 2026 &middot; Sosialisasi</span>
-          <h3>Sosialisasi Pengisian Formulir Daftar Kepentingan Pribadi</h3>
-          <p>Seluruh pegawai dihimbau mengisi formulir secara digital melalui SiKonKep sebagai upaya pencegahan konflik kepentingan sejak dini.</p>
-        </div>
-      </article>
-      <article>
-        <img src="assets/berita-pembaruan.jpg" alt="Tampilan aplikasi SiKonKep di komputer">
-        <div class="isi">
-          <span class="tgl">Agustus 2026 &middot; Pembaruan</span>
-          <h3>SiKonKep v1.1: Lembar Lihat Admin Persis Formulir Asli</h3>
-          <p>Rilis terbaru memperbaiki penyimpanan ke Neon dan menampilkan lembar isian di halaman admin lengkap dengan tanda tangan, siap cetak/PDF.</p>
-        </div>
-      </article>
-      <article>
-        <img src="assets/berita-ttd.jpg" alt="Tanda tangan digital pada layar sentuh">
-        <div class="isi">
-          <span class="tgl">Juli 2026 &middot; Fitur</span>
-          <h3>Tanda Tangan Digital Kini Mendukung Layar Sentuh</h3>
-          <p>Isian dan tanda tangan tersimpan otomatis di peramban, sehingga tidak hilang meski halaman ditutup sebelum dikirim.</p>
-        </div>
-      </article>
-    </div>
-  </div>
-</section>
-
 <!-- ===== INFO & PANDUAN ===== -->
 <section class="info" id="panduan">
   <div class="container">
@@ -486,31 +397,6 @@
           <a class="tautan" href="PANDUAN.md">Pelajari Alur Data</a>
         </div>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== TAUTAN TERKAIT ===== -->
-<section class="mitra">
-  <div class="container">
-    <div class="judul-seksi">
-      <h2>Situs Terkait</h2>
-      <div class="garis-judul"></div>
-      <p>Layanan pemerintah lainnya terkait pelaporan dan pencegahan konflik kepentingan.</p>
-    </div>
-    <div class="mitra-grid">
-      <a href="https://kws.kpk.go.id/" target="_blank" rel="noopener">
-        <span class="inisial">KPK</span>
-        <span class="ket"><b>Whistleblowing KPK</b><small>Pengaduan masyarakat KPK</small></span>
-      </a>
-      <a href="https://www.lapor.go.id/" target="_blank" rel="noopener">
-        <span class="inisial">SP4N</span>
-        <span class="ket"><b>LAPOR! &mdash; SP4N</b><small>Sistem pengelolaan pengaduan nasional</small></span>
-      </a>
-      <a href="https://wbs.acehtengahkab.go.id/" target="_blank" rel="noopener">
-        <span class="inisial">WBS</span>
-        <span class="ket"><b>WBS Inspektorat Aceh Tengah</b><small>Sistem pengaduan internal</small></span>
-      </a>
     </div>
   </div>
 </section>
@@ -602,17 +488,8 @@
   hero.addEventListener("mouseleave", restart);
   restart();
 
-  /* ---------- Geser berita ---------- */
-  var track = document.getElementById("brTrack");
-  function lebarKartu(){
-    var k = track.querySelector("article");
-    return k ? k.getBoundingClientRect().width + 24 : 364;
-  }
-  document.getElementById("brKiri").addEventListener("click", function(){ track.scrollBy({left:-lebarKartu(), behavior:"smooth"}); });
-  document.getElementById("brKanan").addEventListener("click", function(){ track.scrollBy({left:lebarKartu(), behavior:"smooth"}); });
-
   /* ---------- Scrollspy nav ---------- */
-  var seksi = ["beranda","fitur","alur","berita","panduan"].map(function(id){ return document.getElementById(id); });
+  var seksi = ["beranda","fitur","alur","panduan"].map(function(id){ return document.getElementById(id); });
   var tautanNav = Array.prototype.slice.call(nav.querySelectorAll('a[href^="#"]'));
   function spy(){
     var y = window.scrollY + 130, aktifId = "beranda";
