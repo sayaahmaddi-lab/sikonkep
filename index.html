@@ -3,43 +3,520 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SiKonKep — Dinas Kominfo Aceh Tengah</title>
+<meta name="description" content="SiKonKep — Formulir Daftar Kepentingan Pribadi digital. Inspektorat Kabupaten Aceh Tengah.">
+<title>SiKonKep — Formulir Daftar Kepentingan Pribadi | Inspektorat Kabupaten Aceh Tengah</title>
+<link rel="icon" type="image/png" href="assets/logo-aceh-tengah.png">
 <style>
-  :root { --biru:#0f2438; --biru2:#1c3a57; --hijau:#1c7c3c; }
-  * { box-sizing:border-box; }
-  body {
-    margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
-    background:linear-gradient(135deg,#0f2438 0%,#1c3a57 60%,#2a4e73 100%);
-    font-family:"Segoe UI",Arial,sans-serif; color:#111;
+  :root{
+    --aksen:#1c7c3c;          /* hijau utama brand Inspektorat */
+    --aksen2:#27ae60;         /* hijau terang hover/steps      */
+    --hijau:#4d7b4e;          /* hijau aksen pre-header        */
+    --navy:#1b2733;           /* biru gelap footer/CTA         */
+    --biru:#0f2438;
+    --teks:#3e4d5c;
+    --abu-bg:#f4f6f8;
+    --garis:#e7ebee;
   }
-  .kartu {
-    width:520px; max-width:94vw; background:#fff; border-radius:14px; padding:30px 28px;
-    box-shadow:0 14px 40px rgba(0,0,0,.35); text-align:center;
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;scroll-padding-top:86px}
+  body{
+    font:400 15px/1.65 "Open Sans","Segoe UI",Arial,Helvetica,sans-serif;
+    color:var(--teks);background:#fff;
   }
-  .kartu h1 { margin:0 0 4px; font-size:22px; color:var(--biru); }
-  .kartu .sub { margin:0 0 18px; font-size:12.5px; color:#567; line-height:1.5 }
-  .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:14px 0 10px }
-  .btn {
-    display:flex; align-items:center; justify-content:center; gap:8px;
-    padding:13px 16px; border-radius:10px; font-size:14px; font-weight:700;
-    color:#fff !important; text-decoration:none; border:none; cursor:pointer;
+  img{max-width:100%;display:block}
+  a{color:var(--aksen);text-decoration:none}
+  a:hover{color:var(--aksen2)}
+  .container{width:min(1140px,92%);margin:0 auto}
+
+  /* ============ PRE-HEADER (bilah gelap atas) ============ */
+  .preheader{
+    background:#333;border-bottom:2px solid var(--hijau);
+    color:#d2d2d2;font-size:12.5px;
   }
-  .btn.utama { background:var(--hijau); grid-column:1 / -1; font-size:15px; padding:15px }
-  .btn.utama:hover { background:#229049; }
-  .btn.biru { background:var(--biru2); }
-  .btn.biru:hover { background:#244a6e; }
+  .preheader .container{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:8px 0}
+  .preheader .kontak{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .preheader .kontak span{display:inline-flex;align-items:center;gap:6px}
+  .preheader svg{width:13px;height:13px;fill:#9fb3a0;flex:none}
+  .preheader .aksen-nav{display:flex;gap:8px}
+  .preheader .aksen-nav a{
+    background:var(--aksen);color:#fff !important;font-weight:600;
+    padding:4px 14px;font-size:12px;text-transform:uppercase;letter-spacing:.4px;
+    transition:background .2s;
+  }
+  .preheader .aksen-nav a:hover{background:var(--aksen2)}
+  .preheader .aksen-nav a.garis{background:transparent;border:1px solid #6d7b6e}
+  .preheader .aksen-nav a.garis:hover{border-color:var(--aksen2);color:var(--aksen2) !important}
+  @media(max-width:700px){.preheader .kontak span:nth-child(2){display:none}}
+
+  /* ============ HEADER PUTIH + NAV ============ */
+  header.situs{
+    background:#fff;border-bottom:1px solid var(--garis);
+    position:sticky;top:0;z-index:999;transition:box-shadow .25s;
+  }
+  header.situs.tergulir{box-shadow:0 3px 14px rgba(20,30,40,.12)}
+  header.situs .container{display:flex;align-items:center;gap:24px;padding:14px 0}
+  .logo{display:flex;align-items:center;gap:12px;margin-right:auto}
+  .logo .marka{height:48px;width:auto;flex:none}
+  .logo .nama{line-height:1.15}
+  .logo .nama b{display:block;font-size:21px;color:var(--biru);letter-spacing:.3px}
+  .logo .nama small{display:block;font-size:11px;color:#7c8894;letter-spacing:.2px}
+  nav.utama ul{display:flex;list-style:none;gap:2px}
+  nav.utama a{
+    display:block;padding:14px 13px;font-size:13px;font-weight:600;
+    text-transform:uppercase;color:#6f6f6f;letter-spacing:.5px;
+    border-bottom:2px solid transparent;transition:color .2s,border-color .2s;
+  }
+  nav.utama a:hover,nav.utama a.aktif{color:var(--aksen2);border-bottom-color:var(--aksen2)}
+  .toggler{
+    display:none;background:none;border:1px solid #cfd6dc;border-radius:4px;
+    padding:7px 10px;cursor:pointer;
+  }
+  .toggler span{display:block;width:20px;height:2px;background:#556;margin:4px 0}
+  @media(max-width:960px){
+    .toggler{display:block}
+    nav.utama{
+      position:absolute;top:100%;left:0;right:0;background:#fff;display:none;
+      border-bottom:1px solid var(--garis);box-shadow:0 12px 20px rgba(20,30,40,.12);
+    }
+    nav.utama.buka{display:block}
+    nav.utama ul{flex-direction:column;padding:8px 4%}
+    nav.utama a{border-bottom:none;border-left:3px solid transparent;padding:11px 10px}
+    nav.utama a.aktif,nav.utama a:hover{border-left-color:var(--aksen2);background:#f0f8f2}
+  }
+
+  /* ============ HERO SLIDER ============ */
+  .hero{position:relative;overflow:hidden;background:var(--biru);color:#fff}
+  .slide{
+    position:absolute;inset:0;opacity:0;transition:opacity 1s ease;
+    display:flex;align-items:center;
+    background:linear-gradient(90deg,rgba(10,22,36,.92) 0%,rgba(10,22,36,.62) 46%,rgba(10,22,36,.28) 100%),url('assets/hero.jpg') center/cover no-repeat;
+  }
+  .slide.aktif{opacity:1;position:relative}
+  .slide .container{padding:88px 0}
+  .slide .eyebrow{
+    display:inline-block;font-size:12px;font-weight:700;letter-spacing:2px;
+    text-transform:uppercase;color:var(--aksen2);margin-bottom:14px;
+  }
+  .slide h1{font-size:clamp(28px,4.4vw,46px);line-height:1.15;font-weight:700;margin-bottom:14px;max-width:640px}
+  .slide h1 em{font-style:normal;color:var(--aksen2)}
+  .slide p{max-width:560px;font-size:15.5px;color:#dfe7ee;margin-bottom:26px}
+  .tombol{
+    display:inline-block;padding:12px 26px;font-size:13.5px;font-weight:700;
+    text-transform:uppercase;letter-spacing:.6px;color:#fff !important;
+    background:var(--aksen);transition:background .2s,transform .15s;
+  }
+  .tombol:hover{background:var(--aksen2);transform:translateY(-1px)}
+  .tombol.ghost{background:transparent;border:1px solid rgba(255,255,255,.55);margin-left:10px}
+  .tombol.ghost:hover{border-color:var(--aksen2);color:var(--aksen2) !important;background:rgba(255,152,0,.08)}
+  .hero .panah{
+    position:absolute;top:50%;transform:translateY(-50%);z-index:5;
+    width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;
+    background:rgba(255,255,255,.14);color:#fff;font-size:20px;line-height:1;
+    transition:background .2s;
+  }
+  .hero .panah:hover{background:var(--aksen2)}
+  .hero .panah.kiri{left:16px}.hero .panah.kanan{right:16px}
+  .hero .dots{position:absolute;bottom:22px;left:0;right:0;display:flex;justify-content:center;gap:9px;z-index:5}
+  .hero .dots button{
+    width:14px;height:14px;border-radius:50%;cursor:pointer;
+    border:2px solid #c9cdce;background:transparent;transition:all .2s;padding:0;
+  }
+  .hero .dots button.aktif{background:var(--aksen2);border-color:var(--aksen2)}
+  @media(max-width:640px){.slide .container{padding:64px 0}.tombol.ghost{margin:10px 0 0}}
+
+  /* ============ KARTU FITUR ============ */
+  .fitur{background:#fff;padding:64px 0 46px}
+  .judul-seksi{text-align:center;margin-bottom:42px}
+  .judul-seksi h2{font-size:28px;color:var(--biru);font-weight:700;margin-bottom:8px}
+  .judul-seksi .garis-judul{width:56px;height:3px;background:var(--aksen2);margin:0 auto 12px}
+  .judul-seksi p{max-width:640px;margin:0 auto;color:#77828d;font-size:14px}
+  .kartu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+  .kartu{
+    background:#fff;border:1px solid var(--garis);border-top:3px solid var(--aksen2);
+    padding:30px 26px;text-align:center;transition:transform .2s,box-shadow .2s;
+  }
+  .kartu:hover{transform:translateY(-5px);box-shadow:0 14px 30px rgba(20,30,40,.12)}
+  .kartu .ikon{
+    width:66px;height:66px;margin:0 auto 18px;border-radius:50%;
+    background:#eaf6ee;border:2px solid var(--aksen2);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .kartu .ikon svg{width:30px;height:30px;fill:var(--aksen)}
+  .kartu h3{font-size:17px;color:var(--biru);margin-bottom:10px;font-weight:700}
+  .kartu p{font-size:13.5px;color:#77828d}
+  @media(max-width:860px){.kartu-grid{grid-template-columns:1fr}}
+
+  /* ============ STEPS BLOCK (pita oranye) ============ */
+  .langkah{background:var(--aksen2);color:#fff;padding:44px 0}
+  .langkah .grid{display:grid;grid-template-columns:repeat(3,1fr)}
+  .langkah .kolom{position:relative;padding:6px 34px 6px 0}
+  .langkah .kolom + .kolom{padding-left:34px}
+  .langkah .kolom:not(:last-child)::after{
+    content:"";position:absolute;top:50%;right:8px;transform:translateY(-50%);
+    border-left:14px solid rgba(255,255,255,.75);border-top:11px solid transparent;border-bottom:11px solid transparent;
+  }
+  .langkah .kolom:not(:last-child){border-right:1px solid rgba(255,255,255,.35)}
+  .langkah .dalam{display:flex;gap:16px;align-items:center}
+  .langkah .angka{
+    flex:none;width:60px;height:60px;border-radius:50%;border:2px solid #fff;
+    display:flex;align-items:center;justify-content:center;
+    font-size:24px;font-weight:800;
+  }
+  .langkah h3{font-size:19px;font-weight:700;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px}
+  .langkah p{font-size:13px;color:#e9f7ee}
+  @media(max-width:860px){
+    .langkah .grid{grid-template-columns:1fr;gap:26px}
+    .langkah .kolom,.langkah .kolom + .kolom{padding:0}
+    .langkah .kolom:not(:last-child)::after{display:none}
+    .langkah .kolom:not(:last-child){border-right:none;border-bottom:1px solid rgba(255,255,255,.35);padding-bottom:26px}
+  }
+
+  /* ============ CTA ============ */
+  .cta{background:var(--navy);color:#fff;padding:52px 0}
+  .cta .container{display:flex;align-items:center;justify-content:space-between;gap:26px;flex-wrap:wrap}
+  .cta h2{font-size:24px;font-weight:700;margin-bottom:6px}
+  .cta p{color:#b9c6d2;font-size:14px;max-width:620px}
+  .cta .tombol{background:var(--aksen2)}
+  .cta .tombol:hover{background:var(--aksen)}
+
+  /* ============ INFO & PANDUAN ============ */
+  .info{background:var(--abu-bg);padding:64px 0}
+  .info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:26px}
+  .info-kartu{background:#fff;border:1px solid var(--garis);display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s}
+  .info-kartu:hover{transform:translateY(-5px);box-shadow:0 14px 30px rgba(20,30,40,.10)}
+  .info-kartu .sampul{
+    height:120px;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,var(--biru),#2a4e73);
+  }
+  .info-kartu:nth-child(2) .sampul{background:linear-gradient(135deg,#0e5a2a,var(--aksen2))}
+  .info-kartu:nth-child(3) .sampul{background:linear-gradient(135deg,#274d28,var(--hijau))}
+  .info-kartu .sampul svg{width:46px;height:46px;fill:#fff;opacity:.92}
+  .info-kartu .isi{padding:22px 22px 24px;display:flex;flex-direction:column;flex:1}
+  .info-kartu h3{font-size:16.5px;color:var(--biru);margin-bottom:8px;font-weight:700}
+  .info-kartu p{font-size:13.5px;color:#77828d;flex:1}
+  .info-kartu .tautan{margin-top:16px;font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px}
+  .info-kartu .tautan::after{content:" →"}
+  @media(max-width:860px){.info-grid{grid-template-columns:1fr}}
+
+  /* ============ FOOTER ============ */
+  footer{background:#141c26;color:#93a1af;font-size:13px}
+  footer .kolom-grid{display:grid;grid-template-columns:2fr 1fr 1.2fr;gap:36px;padding:52px 0 40px}
+  footer h4{color:#fff;font-size:14px;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px}
+  footer .judul-besar{color:#fff;font-size:18px;font-weight:700;margin-bottom:10px}
+  footer ul{list-style:none}
+  footer li{margin-bottom:8px}
+  footer a{color:#93a1af}
+  footer a:hover{color:var(--aksen2)}
+  footer .bawah{border-top:1px solid #263140;padding:16px 0;font-size:12px}
+  footer .bawah .container{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  @media(max-width:860px){footer .kolom-grid{grid-template-columns:1fr}}
+
+  /* ============ KEMBALI KE ATAS ============ */
+  #keAtas{
+    position:fixed;right:20px;bottom:20px;z-index:998;width:44px;height:44px;
+    border:none;border-radius:50%;background:var(--aksen);color:#fff;font-size:18px;cursor:pointer;
+    opacity:0;visibility:hidden;transform:translateY(10px);transition:all .25s;
+    box-shadow:0 8px 18px rgba(0,0,0,.25);
+  }
+  #keAtas.tampil{opacity:1;visibility:visible;transform:none}
+  #keAtas:hover{background:var(--aksen2)}
 </style>
 </head>
 <body>
-  <div class="kartu">
-    <h1>SiKonKep</h1>
-    <p class="sub">Formulir Daftar Kepentingan Pribadi<br>Dinas Komunikasi dan Informatika Kab. Aceh Tengah</p>
 
-    <div class="grid">
-      <a class="btn utama" href="formulir-daftar-kepentingan-pribadi.html">📝 Isi Formulir Online</a>
-      <a class="btn biru" href="login.html">🔐 Login Admin</a>
-      <a class="btn biru" href="admin.html">📊 Dashboard Admin</a>
+<!-- ===== PRE-HEADER ===== -->
+<div class="preheader">
+  <div class="container">
+    <div class="kontak">
+      <span><svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg>Takengon, Kab. Aceh Tengah, Aceh</span>
+      <span><svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>Inspektorat Kabupaten Aceh Tengah</span>
+    </div>
+    <div class="aksen-nav">
+      <a href="login.html">Login Admin</a>
+      <a class="garis" href="admin.html">Dashboard</a>
     </div>
   </div>
+</div>
+
+<!-- ===== HEADER ===== -->
+<header class="situs" id="atas">
+  <div class="container">
+    <a class="logo" href="#beranda" aria-label="Beranda SiKonKep">
+      <img class="marka" src="assets/logo-aceh-tengah.png" alt="Lambang Kabupaten Aceh Tengah">
+      <span class="nama"><b>SiKonKep</b><small>Formulir Daftar Kepentingan Pribadi</small></span>
+    </a>
+    <button class="toggler" id="toggler" aria-label="Buka menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    <nav class="utama" id="navUtama" aria-label="Navigasi utama">
+      <ul>
+        <li><a href="#beranda" class="aktif">Beranda</a></li>
+        <li><a href="#fitur">Fitur</a></li>
+        <li><a href="#alur">Alur</a></li>
+        <li><a href="#panduan">Panduan</a></li>
+        <li><a href="formulir-daftar-kepentingan-pribadi.html">Isi Formulir</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<!-- ===== HERO SLIDER ===== -->
+<section class="hero" id="beranda" aria-label="Sorotan">
+  <div class="slide aktif">
+    <div class="container">
+      <span class="eyebrow">Inspektorat Kabupaten Aceh Tengah</span>
+      <h1>Formulir <em>Daftar Kepentingan Pribadi</em> secara Digital</h1>
+      <p>Deklarasikan hubungan keluarga, bisnis, dan afiliasi lainnya sebagai upaya pencegahan konflik kepentingan — cepat, rapi, dan tanpa kertas.</p>
+      <a class="tombol" href="formulir-daftar-kepentingan-pribadi.html">Isi Formulir Sekarang</a>
+      <a class="tombol ghost" href="#alur">Lihat Alur Pengisian</a>
+    </div>
+  </div>
+  <div class="slide">
+    <div class="container">
+      <span class="eyebrow">Tanda Tangan Digital</span>
+      <h1>Tanda Tangan di <em>Ujung Jari</em> Anda</h1>
+      <p>Bubuhkan tanda tangan langsung lewat mouse atau layar sentuh, lengkap dengan pernyataan kebenaran isian — tersimpan sebagai gambar pada lembar formulir.</p>
+      <a class="tombol" href="formulir-daftar-kepentingan-pribadi.html">Mulai Mengisi</a>
+    </div>
+  </div>
+  <div class="slide">
+    <div class="container">
+      <span class="eyebrow">Rekap &amp; Administrasi</span>
+      <h1>Data Aman, <em>Rekap Terpusat</em></h1>
+      <p>Setiap isian tersimpan ke database dan siap direkap oleh admin: ubah status, beri catatan, ekspor CSV, hingga cetak lembar formulir dalam PDF ukuran A4.</p>
+      <a class="tombol" href="login.html">Masuk Admin</a>
+    </div>
+  </div>
+  <button class="panah kiri" id="slKiri" aria-label="Slide sebelumnya">&#10094;</button>
+  <button class="panah kanan" id="slKanan" aria-label="Slide berikutnya">&#10095;</button>
+  <div class="dots" id="slDots" role="tablist" aria-label="Pilih slide"></div>
+</section>
+
+<!-- ===== KARTU FITUR ===== -->
+<section class="fitur" id="fitur">
+  <div class="container">
+    <div class="judul-seksi">
+      <h2>Mengapa SiKonKep?</h2>
+      <div class="garis-judul"></div>
+      <p>Aplikasi pengisian Formulir Daftar Kepentingan Pribadi yang dirancang sesuai lembar aslinya, dari identitas hingga Bagian A&ndash;F dan pernyataan.</p>
+    </div>
+    <div class="kartu-grid">
+      <div class="kartu">
+        <div class="ikon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg></div>
+        <h3>Formulir Sesuai Format Asli</h3>
+        <p>Identitas pegawai, Bagian A&ndash;F, dan pernyataan disusun persis lembar fisik, termasuk tampilan cetak/PDF yang rapi.</p>
+      </div>
+      <div class="kartu">
+        <div class="ikon"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.8 9.94l-3.75-3.75L3 17.25zM20.7 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></div>
+        <h3>Tanda Tangan Digital</h3>
+        <p>Canvas tanda tangan mendukung mouse maupun layar sentuh, dengan tombol urung dan hapus, serta simpan otomatis di peramban.</p>
+      </div>
+      <div class="kartu">
+        <div class="ikon"><svg viewBox="0 0 24 24"><path d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg></div>
+        <h3>Data Aman &amp; Terintegrasi</h3>
+        <p>Tersimpan ke Neon PostgreSQL (daring) atau MySQL (lokal/XAMPP). Halaman admin dilindungi login dan token JWT.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== STEPS BLOCK ===== -->
+<section class="langkah" id="alur">
+  <div class="container">
+    <div class="grid">
+      <div class="kolom">
+        <div class="dalam">
+          <div class="angka">1</div>
+          <div>
+            <h3>Isi Formulir</h3>
+            <p>Lengkapi identitas serta Bagian A sampai F sesuai kondisi sebenarnya. Isian tersimpan otomatis di peramban.</p>
+          </div>
+        </div>
+      </div>
+      <div class="kolom">
+        <div class="dalam">
+          <div class="angka">2</div>
+          <div>
+            <h3>Tanda Tangan &amp; Pernyataan</h3>
+            <p>Bubuhkan tanda tangan digital pada tempat yang tersedia dan lengkapi pernyataan kebenaran isian.</p>
+          </div>
+        </div>
+      </div>
+      <div class="kolom">
+        <div class="dalam">
+          <div class="angka">3</div>
+          <div>
+            <h3>Simpan / Cetak</h3>
+            <p>Simpan ke database instansi, lalu cetak atau unduh sebagai PDF A4 yang rapi dan siap diarsipkan.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="cta">
+  <div class="container">
+    <div>
+      <h2>Sudah siap mendeklarasikan kepentingan pribadi Anda?</h2>
+      <p>Pengisian hanya membutuhkan beberapa menit. Isian Anda membantu pencegahan konflik kepentingan di lingkungan Pemerintah Kabupaten Aceh Tengah.</p>
+    </div>
+    <a class="tombol" href="formulir-daftar-kepentingan-pribadi.html">Isi Formulir</a>
+  </div>
+</section>
+
+<!-- ===== INFO & PANDUAN ===== -->
+<section class="info" id="panduan">
+  <div class="container">
+    <div class="judul-seksi">
+      <h2>Informasi &amp; Panduan</h2>
+      <div class="garis-judul"></div>
+      <p>Baca panduan pemasangan, alur data, dan pengelolaan halaman admin sebelum menggunakan aplikasi.</p>
+    </div>
+    <div class="info-grid">
+      <div class="info-kartu">
+        <div class="sampul"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg></div>
+        <div class="isi">
+          <h3>Manual Penggunaan</h3>
+          <p>Langkah demi langkah bagi pegawai (isi, tanda tangan, kirim, cetak) dan admin (rekap, status, ekspor CSV) — siap cetak/PDF.</p>
+          <a class="tautan" href="manual-penggunaan.html">Baca Manual</a>
+        </div>
+      </div>
+      <div class="info-kartu">
+        <div class="sampul"><svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.8 9.94l-3.75-3.75L3 17.25zM20.7 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg></div>
+        <div class="isi">
+          <h3>Manual Pengisian (Pegawai)</h3>
+          <p>Panduan lengkap per butir: identitas, Bagian A&ndash;F, pernyataan, tanda tangan digital, hingga kirim &amp; cetak.</p>
+          <a class="tautan" href="manual-pengisian.html">Baca Manual Pengisian</a>
+        </div>
+      </div>
+      <div class="info-kartu">
+        <div class="sampul"><svg viewBox="0 0 24 24" style="fill:none;stroke:#fff;stroke-width:2;stroke-linejoin:round;stroke-linecap:round"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="m2 12 10 5 10-5"/><path d="m2 17 10 5 10-5"/></svg></div>
+        <div class="isi">
+          <h3>Panduan Pemasangan</h3>
+          <p>Langkah lengkap pemasangan untuk dua moda: lokal dengan XAMPP + MySQL, maupun daring dengan Vercel + Neon PostgreSQL.</p>
+          <a class="tautan" href="PANDUAN.md">Baca Panduan</a>
+        </div>
+      </div>
+      <div class="info-kartu">
+        <div class="sampul"><svg viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg></div>
+        <div class="isi">
+          <h3>Halaman Admin</h3>
+          <p>Rekap seluruh isian, lembar isian persis formulir asli lengkap dengan tanda tangan, ubah status &amp; catatan, hingga ekspor CSV.</p>
+          <a class="tautan" href="login.html">Masuk Admin</a>
+        </div>
+      </div>
+      <div class="info-kartu">
+        <div class="sampul"><svg viewBox="0 0 24 24"><path d="M12 3 2 12h3v8h6v-6h2v6h6v-8h3L12 3z"/></svg></div>
+        <div class="isi">
+          <h3>Alur Data &amp; Keamanan</h3>
+          <p>Pahami bagaimana data mengalir dari formulir ke database, serta bagaimana halaman admin diamankan dengan login dan JWT.</p>
+          <a class="tautan" href="PANDUAN.md">Pelajari Alur Data</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="container">
+    <div class="kolom-grid">
+      <div>
+        <div class="judul-besar">SiKonKep</div>
+        <p>Aplikasi Formulir Daftar Kepentingan Pribadi untuk pencegahan konflik kepentingan, dikembangkan dan digunakan di lingkungan Inspektorat Kabupaten Aceh Tengah.</p>
+      </div>
+      <div>
+        <h4>Tautan</h4>
+        <ul>
+          <li><a href="formulir-daftar-kepentingan-pribadi.html">Isi Formulir</a></li>
+          <li><a href="login.html">Login Admin</a></li>
+          <li><a href="admin.html">Dashboard Admin</a></li>
+          <li><a href="manual-penggunaan.html">Manual Penggunaan</a></li>
+          <li><a href="manual-pengisian.html">Manual Pengisian (Pegawai)</a></li>
+          <li><a href="PANDUAN.md">Panduan Pemasangan</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Kontak</h4>
+        <ul>
+          <li>Inspektorat Kabupaten Aceh Tengah</li>
+          <li>Kabupaten Aceh Tengah &mdash; Takengon, Aceh</li>
+          <li><a href="#beranda">Kembali ke beranda &uarr;</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="bawah">
+    <div class="container">
+      <span>&copy; 2026 Inspektorat Kabupaten Aceh Tengah &mdash; SiKonKep v1.1</span>
+      <span>Formulir Daftar Kepentingan Pribadi</span>
+    </div>
+  </div>
+</footer>
+
+<button id="keAtas" aria-label="Kembali ke atas" title="Kembali ke atas">&#8593;</button>
+
+<script>
+(function(){
+  "use strict";
+  /* ---------- Header menggulung ---------- */
+  var header = document.querySelector("header.situs");
+  var keAtas = document.getElementById("keAtas");
+  window.addEventListener("scroll", function(){
+    header.classList.toggle("tergulir", window.scrollY > 8);
+    keAtas.classList.toggle("tampil", window.scrollY > 420);
+    spy();
+  }, {passive:true});
+  keAtas.addEventListener("click", function(){ window.scrollTo({top:0, behavior:"smooth"}); });
+
+  /* ---------- Menu ponsel ---------- */
+  var tog = document.getElementById("toggler");
+  var nav = document.getElementById("navUtama");
+  tog.addEventListener("click", function(){
+    var buka = nav.classList.toggle("buka");
+    tog.setAttribute("aria-expanded", buka ? "true" : "false");
+  });
+  nav.addEventListener("click", function(e){
+    if(e.target.tagName === "A"){ nav.classList.remove("buka"); tog.setAttribute("aria-expanded","false"); }
+  });
+
+  /* ---------- Slider hero ---------- */
+  var slides = Array.prototype.slice.call(document.querySelectorAll(".slide"));
+  var dotsBox = document.getElementById("slDots");
+  var idx = 0, timer = null;
+  slides.forEach(function(_, i){
+    var b = document.createElement("button");
+    b.setAttribute("role","tab");
+    b.setAttribute("aria-label","Slide " + (i+1));
+    if(i === 0) b.classList.add("aktif");
+    b.addEventListener("click", function(){ go(i); restart(); });
+    dotsBox.appendChild(b);
+  });
+  var dots = Array.prototype.slice.call(dotsBox.children);
+  function go(n){
+    idx = (n + slides.length) % slides.length;
+    slides.forEach(function(s,i){ s.classList.toggle("aktif", i === idx); });
+    dots.forEach(function(d,i){ d.classList.toggle("aktif", i === idx); });
+  }
+  function restart(){ if(timer) clearInterval(timer); timer = setInterval(function(){ go(idx+1); }, 6000); }
+  document.getElementById("slKiri").addEventListener("click", function(){ go(idx-1); restart(); });
+  document.getElementById("slKanan").addEventListener("click", function(){ go(idx+1); restart(); });
+  var hero = document.querySelector(".hero");
+  hero.addEventListener("mouseenter", function(){ if(timer) clearInterval(timer); timer = null; });
+  hero.addEventListener("mouseleave", restart);
+  restart();
+
+  /* ---------- Scrollspy nav ---------- */
+  var seksi = ["beranda","fitur","alur","panduan"].map(function(id){ return document.getElementById(id); });
+  var tautanNav = Array.prototype.slice.call(nav.querySelectorAll('a[href^="#"]'));
+  function spy(){
+    var y = window.scrollY + 130, aktifId = "beranda";
+    seksi.forEach(function(s){ if(s && s.offsetTop <= y) aktifId = s.id; });
+    if((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 4) aktifId = "panduan";
+    tautanNav.forEach(function(a){ a.classList.toggle("aktif", a.getAttribute("href") === "#" + aktifId); });
+  }
+  spy();
+})();
+</script>
 </body>
 </html>

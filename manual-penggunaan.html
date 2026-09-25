@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Manual penggunaan SiKonKep untuk pengguna (pegawai) dan admin — Pemerintah Kabupaten Aceh Tengah.">
+<title>Manual Penggunaan — SiKonKep | Pemerintah Kabupaten Aceh Tengah</title>
+<link rel="icon" type="image/png" href="assets/logo-aceh-tengah.png">
+<style>
+  :root{
+    --aksen:#1c7c3c; --aksen2:#27ae60; --biru:#0f2438; --teks:#3e4d5c; --garis:#e3e8ec; --abu:#f4f6f8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font:400 14.5px/1.7 "Open Sans","Segoe UI",Arial,sans-serif;color:var(--teks);background:var(--abu)}
+  a{color:var(--aksen)}
+  img{max-width:100%}
+
+  .atas{
+    background:#fff;border-bottom:1px solid var(--garis);position:sticky;top:0;z-index:10;
+  }
+  .atas .dalam{
+    width:min(920px,94%);margin:0 auto;display:flex;align-items:center;gap:12px;padding:10px 0;
+  }
+  .atas img{height:40px;width:auto}
+  .atas b{color:var(--biru);font-size:16px}
+  .atas small{display:block;color:#7c8894;font-size:11px}
+  .atas nav{margin-left:auto;display:flex;gap:14px;font-size:12.5px;font-weight:600}
+  .atas nav a{text-decoration:none}
+  @media(max-width:640px){.atas nav{display:none}}
+
+  .dok{
+    width:min(920px,94%);margin:26px auto 60px;background:#fff;border:1px solid var(--garis);
+    padding:44px 48px 54px;box-shadow:0 6px 24px rgba(20,30,40,.07);
+  }
+  @media(max-width:640px){.dok{padding:26px 18px}}
+
+  .kep{display:flex;gap:16px;align-items:center;border-bottom:3px double var(--aksen);padding-bottom:16px;margin-bottom:8px}
+  .kep img{height:70px;width:auto}
+  .kep h1{font-size:20px;color:var(--biru);text-transform:uppercase;letter-spacing:.5px}
+  .kep p{font-size:12.5px;color:#667}
+
+  h2{
+    font-size:16.5px;color:#fff;background:var(--aksen);display:inline-block;
+    padding:6px 14px;margin:30px 0 14px;letter-spacing:.4px;
+  }
+  h3{font-size:14.5px;color:var(--biru);margin:18px 0 8px}
+  p, li{font-size:13.8px}
+  ul, ol{margin:0 0 12px 22px}
+  li{margin-bottom:6px}
+  .langkah li::marker{font-weight:700;color:var(--aksen)}
+  table{width:100%;border-collapse:collapse;margin:10px 0 16px;font-size:13px}
+  th,td{border:1px solid var(--garis);padding:7px 10px;text-align:left;vertical-align:top}
+  th{background:var(--abu);color:var(--biru)}
+  .kotak{
+    background:#f2f9f4;border:1px solid #cde8d4;border-left:4px solid var(--aksen2);
+    padding:12px 14px;margin:12px 0;font-size:13px;
+  }
+  .kotak.warna{background:#fdf6ec;border-color:#f0dcb8;border-left-color:#e0a030}
+  .tombol{
+    display:inline-block;background:var(--aksen);color:#fff !important;text-decoration:none;
+    padding:9px 20px;font-weight:700;font-size:13px;margin:6px 0 2px;
+  }
+  .tombol:hover{background:var(--aksen2)}
+  kbd{
+    background:#eef1f4;border:1px solid #cfd6dc;border-bottom-width:2px;border-radius:4px;
+    padding:1px 6px;font:600 12px/1.5 monospace;color:#334;
+  }
+  .toc{background:var(--abu);border:1px solid var(--garis);padding:14px 18px;margin:18px 0 6px}
+  .toc ol{margin:6px 0 0 20px}
+  .toc a{text-decoration:none}
+  hr{border:none;border-top:1px dashed #c9d2d9;margin:26px 0}
+
+  @media print{
+    body{background:#fff}
+    .atas{display:none}
+    .dok{width:auto;margin:0;border:none;box-shadow:none;padding:0}
+    h2{background:none;color:var(--aksen);border:1px solid var(--aksen);padding:4px 10px}
+    .kotak{break-inside:avoid}
+    table{break-inside:auto}
+    tr{break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+
+<div class="atas">
+  <div class="dalam">
+    <img src="assets/logo-aceh-tengah.png" alt="Lambang Kabupaten Aceh Tengah">
+    <span><b>SiKonKep</b><small>Manual Penggunaan — Pemerintah Kabupaten Aceh Tengah</small></span>
+    <nav>
+      <a href="index.html">Beranda</a>
+      <a href="formulir-daftar-kepentingan-pribadi.html">Formulir</a>
+      <a href="manual-pengisian.html">Manual Pengisian</a>
+      <a href="login.html">Login Admin</a>
+    </nav>
+  </div>
+</div>
+
+<div class="dok">
+
+  <div class="kep">
+    <img src="assets/logo-aceh-tengah.png" alt="Lambang Kabupaten Aceh Tengah">
+    <div>
+      <h1>Manual Penggunaan SiKonKep</h1>
+      <p>Formulir Daftar Kepentingan Pribadi — Pemerintah Kabupaten Aceh Tengah<br>
+      Untuk <b>pengguna (pegawai)</b> dan <b>admin</b> &middot; dapat dicetak / disimpan sebagai PDF</p>
+    </div>
+  </div>
+
+  <div class="toc">
+    <b>Daftar Isi</b>
+    <ol>
+      <li><a href="#sekilas">Sekilas SiKonKep</a></li>
+      <li><a href="#pengguna">Bagian I — Manual Pengguna (Pegawai)</a></li>
+      <li><a href="#admin">Bagian II — Manual Admin</a></li>
+      <li><a href="#faq">Bagian III — Tanya Jawab &amp; Tips</a></li>
+    </ol>
+  </div>
+
+  <h2 id="sekilas">1. Sekilas SiKonKep</h2>
+  <p>SiKonKep adalah aplikasi web untuk mengisi <b>Formulir Daftar Kepentingan Pribadi</b> secara digital
+  sebagai upaya pencegahan konflik kepentingan. Pegawai mengisi formulir, membubuhkan tanda tangan
+  digital, lalu menyimpannya ke database instansi. Admin mengelola rekap isian: melihat lembar,
+  mengubah status, memberi catatan, dan mengekspor CSV.</p>
+  <ul>
+    <li><b>Mode daring</b> (Vercel + Neon PostgreSQL): akses melalui alamat situs instansi.</li>
+    <li><b>Mode lokal</b> (XAMPP + MySQL): akses melalui <kbd>http://localhost/…</kbd> di jaringan kantor.</li>
+    <li>Halaman mendeteksi mode secara otomatis — pengguna tidak perlu memilih apa pun.</li>
+  </ul>
+
+  <h2 id="pengguna">2. Bagian I — Manual Pengguna (Pegawai)</h2>
+  <div class="kotak">Panduan <b>per butir isian</b> (identitas s.d. Bagian F, lengkap dengan contoh) tersedia di
+  <a href="manual-pengisian.html"><b>Manual Pengisian Formulir</b></a>. Bagian ini merangkum alurnya.</div>
+
+  <h3>2.1 Membuka formulir</h3>
+  <ol class="langkah">
+    <li>Buka beranda SiKonKep, lalu klik <b>Isi Formulir Sekarang</b>, atau buka langsung halaman formulir dari tautan yang dibagikan instansi.</li>
+    <li>Formulir dapat diisi lewat komputer maupun ponsel (layar sentuh).</li>
+  </ol>
+
+  <h3>2.2 Mengisi identitas</h3>
+  <p>Lengkapi blok identitas di bagian atas: <b>Nama, NIP, Pangkat/Golongan, Jabatan, Perangkat Daerah,
+  Unit Kerja</b>, serta <b>Tanggal Pengisian</b>. Isian nama dan NIP di sini juga dipakai otomatis
+  pada kolom tanda tangan di lembar akhir.</p>
+
+  <h3>2.3 Mengisi Bagian A–F</h3>
+  <ul>
+    <li><b>Bagian A–D</b> (hubungan keluarga, bisnis, pekerjaan lain, rangkap jabatan): isi setiap baris tabel sesuai keadaan; biarkan kosong bila tidak ada yang dilaporkan.</li>
+    <li><b>Bagian E &amp; F</b>: pilih <b>Ya</b> atau <b>Tidak</b> pada tiap pertanyaan. Bila memilih <b>Ya</b>, uraikan rincian pada kolom yang muncul (nama organisasi/instansi, posisi, situasi, dan sebagainya).</li>
+  </ul>
+
+  <h3>2.4 Pernyataan dan tanda tangan digital</h3>
+  <ol class="langkah">
+    <li>Baca tiga butir pernyataan di akhir formulir.</li>
+    <li>Gambar tanda tangan di dalam kotak bertepi (mouse atau jari pada layar sentuh).</li>
+    <li><b>Undo</b> membatalkan goresan terakhir; <b>Hapus Tanda Tangan</b> mengosongkan kotak sepenuhnya.</li>
+    <li>Kolom nama/NIP serta tempat-tanggal tidak perlu diisi manual — lembar jadi mengisinya otomatis.</li>
+  </ol>
+
+  <h3>2.5 Simpan otomatis di peramban</h3>
+  <div class="kotak">
+    Seluruh isian <b>dan</b> tanda tangan tersimpan otomatis di peramban (localStorage) setiap kali berubah.
+    Bila halaman tertutup atau komputer mati sebelum selesai, buka kembali halaman yang sama pada
+    <b>peramban yang sama</b> — isian berlanjut. Tombol <b>🗑️ Kosongkan</b> memulai dari awal.
+  </div>
+
+  <h3>2.6 Mengirim ke database instansi</h3>
+  <ol class="langkah">
+    <li>Pastikan seluruh isian lengkap dan tanda tangan sudah dibubuhkan.</li>
+    <li>Klik tombol <b>☁️ Simpan ke Database</b> pada bilah atas.</li>
+    <li>Tunggu pesan berhasil. Data langsung masuk rekap admin.</li>
+    <li>Bila ingin memperbaiki isian setelah terkirim, hubungi admin — atau perbaiki lalu kirim ulang dan beri tahu admin agar memakai data terbaru.</li>
+  </ol>
+
+  <h3>2.7 Mencetak / menyimpan PDF</h3>
+  <ul>
+    <li>Tekan <kbd>Ctrl</kbd>+<kbd>P</kbd> (atau menu cetak peramban) pada halaman formulir.</li>
+    <li>Tata letak sudah diatur ukuran <b>A4</b>; bilah tombol tidak ikut tercetak.</li>
+    <li>Simpan tujuan <i>Save as PDF</i> bila ingin berkas digital.</li>
+  </ul>
+
+  <h3>2.8 Etika &amp; privasi</h3>
+  <ul>
+    <li>Isi dengan keadaan sebenarnya; formulir adalah pernyataan resmi yang Anda tandatangani.</li>
+    <li>Selesai pada komputer bersama? Gunakan <b>🗑️ Kosongkan</b> setelah mengirim, agar isian tidak tertinggal di peramban.</li>
+  </ul>
+
+  <hr>
+
+  <h2 id="admin">3. Bagian II — Manual Admin</h2>
+
+  <h3>3.1 Masuk (login)</h3>
+  <ol class="langkah">
+    <li>Buka halaman <b>Login Admin</b> dari beranda, atau langsung <kbd>…/login.html</kbd>.</li>
+    <li>Masukkan <b>username</b> dan <b>password</b> admin.
+        (Daring: diatur pada Environment Variables Vercel — <code>ADMIN_USER</code>/<code>ADMIN_PASS</code>;
+        Lokal: pada <code>backend/config.php</code>.)</li>
+    <li>Setelah berhasil, Anda diarahkan ke dashboard.</li>
+  </ol>
+
+  <h3>3.2 Membaca dashboard</h3>
+  <ul>
+    <li>Kartu ringkasan: <b>Total pengisian</b>, <b>Berstatus BARU</b>, dan <b>Login sebagai</b>.</li>
+    <li>Kolom <b>cari</b>: saring cepat berdasarkan nama / NIP / jabatan.</li>
+    <li>Pilihan <b>status</b>: saring BARU / DIPROSES / SELESAI / DITOLAK; <b>↻ Muat ulang</b> menyegarkan data.</li>
+    <li>Tabel rekap memuat ringkasan Bagian A–F, jumlah <b>E (Ya)</b>, penanda <b>Ttd</b> (ada/tidaknya tanda tangan), status, dan waktu kirim.</li>
+  </ul>
+
+  <h3>3.3 Melihat lembar isian (persis formulir asli)</h3>
+  <ol class="langkah">
+    <li>Klik <b>📄 Lihat</b> pada baris data.</li>
+    <li>Lembar terbuka hanya-baca: kop Pemerintah Kabupaten Aceh Tengah, isian lengkap, tempat-tanggal terisi otomatis, nama tampil sebagai <b>( nama )</b> bergaris bawah dengan awalan NIP, dan tanda tangan pada tempatnya.</li>
+    <li>Klik <b>🖨 Cetak / PDF</b> untuk mencetak atau menyimpan PDF A4; <b>⬅ Kembali ke Admin</b> untuk pulang ke dashboard.</li>
+  </ol>
+
+  <h3>3.4 Mengubah status &amp; catatan</h3>
+  <ol class="langkah">
+    <li>Klik <b>⚙ Status</b> pada baris data.</li>
+    <li>Pilih status: <b>BARU</b>, <b>DIPROSES</b>, <b>SELESAI</b>, atau <b>DITOLAK</b>; tuliskan catatan bila perlu (mis. “NIP mohon dilengkapi”).</li>
+    <li>Klik <b>Simpan Status</b>. Catatan tampil di bawah lencana status pada tabel.</li>
+  </ol>
+  <table>
+    <tr><th>Status</th><th>Arti</th></tr>
+    <tr><td>BARU</td><td>Baru dikirim pegawai; belum ditinjau admin.</td></tr>
+    <tr><td>DIPROSES</td><td>Sedang ditinjau/diverifikasi.</td></tr>
+    <tr><td>SELESAI</td><td>Terverifikasi lengkap; siap diarsipkan.</td></tr>
+    <tr><td>DITOLAK</td><td>Perlu perbaikan — sampaikan catatan agar pegawai mengisi &amp; mengirim ulang.</td></tr>
+  </table>
+
+  <h3>3.5 Ekspor CSV &amp; keluar</h3>
+  <ul>
+    <li><b>⬇ Export CSV</b> mengunduh seluruh rekap (sesuai saringan aktif) untuk diolah di Excel/Sheets.</li>
+    <li><b>Keluar</b> mengakhiri sesi admin — selalu gunakan setelah selesai, terutama pada komputer bersama.</li>
+  </ul>
+
+  <div class="kotak warna">
+    <b>Keamanan:</b> jangan bagikan kredensial admin. Ganti password secara berkala
+    (Vercel: ubah <code>ADMIN_PASS</code>; lokal: <code>backend/config.php</code>, dapat memakai hash bcrypt — lihat PANDUAN.md).
+  </div>
+
+  <hr>
+
+  <h2 id="faq">4. Bagian III — Tanya Jawab &amp; Tips</h2>
+  <table>
+    <tr><th style="width:38%">Pertanyaan</th><th>Jawaban</th></tr>
+    <tr><td>Isian saya hilang?</td><td>Simpan otomatis melekat pada <b>peramban &amp; perangkat yang sama</b>. Buka kembali di perangkat/peramban semula. Mengganti perangkat berarti memulai isian baru.</td></tr>
+    <tr><td>Sudah klik “Simpan ke Database”, lalu menemukan kesalahan?</td><td>Perbaiki isian, kirim ulang, lalu informasikan admin agar menandai kiriman terbaru (data lama dapat berstatus DITOLAK).</td></tr>
+    <tr><td>Tanda tangan sulit tergambar di ponsel?</td><td>Pastikan menggambar di <b>dalam kotak</b> bertepi; area kotak memang menangkap sentuhan (halaman tidak akan bergulir saat jari bergerak di dalamnya).</td></tr>
+    <tr><td>Lupa password admin?</td><td>Daring: perbarui <code>ADMIN_PASS</code> di Vercel → Settings → Environment Variables, lalu deploy ulang. Lokal: sunting <code>backend/config.php</code>.</td></tr>
+    <tr><td>Bagaimana memasang aplikasi ini?</td><td>Lihat <b>PANDUAN.md</b> di repositori: opsi Vercel + Neon (daring) atau XAMPP + MySQL (lokal).</td></tr>
+    <tr><td>Apakah manual ini bisa dicetak?</td><td>Bisa — tekan <kbd>Ctrl</kbd>+<kbd>P</kbd>; kepala halaman navigasi otomatis disembunyikan.</td></tr>
+  </table>
+
+  <p style="margin-top:18px">
+    <a class="tombol" href="formulir-daftar-kepentingan-pribadi.html">Buka Formulir</a>&nbsp;
+    <a class="tombol" style="background:#33475c" href="login.html">Login Admin</a>
+  </p>
+
+</div>
+</body>
+</html>

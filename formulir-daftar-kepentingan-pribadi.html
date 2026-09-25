@@ -64,14 +64,16 @@
   body.mode-lihat canvas#ttdCanvas { pointer-events: none; cursor: default; }
   body.mode-lihat .ttd-tools, body.mode-lihat .ttd-pad-hint { display: none !important; }
   /* Blok tanda tangan mode lihat: tampil selayaknya lembar surat jadi */
-  body.mode-lihat .ttd .label-ttd { display: none; }              /* hilangkan "Ttd." */
-  body.mode-lihat .ttd .spasi { display: none; }
+  body.mode-lihat .ttd .label-tempat {
+    display: block; width: 240px; margin: 0 0 2px auto; text-align: center;
+  }                                                              /* tempat & tanggal: kolom 240px sejajar nama/NIP */
   body.mode-lihat .ttd-pad-wrap { text-align: right; }            /* ttd rata kanan, persis di atas nama */
   body.mode-lihat canvas#ttdCanvas {
     display: inline-block; vertical-align: bottom; margin: 0;
     border: none; border-radius: 0;                               /* tanpa border */
   }
-  body.mode-lihat .ttd .nama-nip input { border-bottom: none; }   /* tanpa garis bawah */
+  body.mode-lihat .ttd .nama-nip input { border-bottom: none; }   /* NIP tanpa garis bawah */
+  body.mode-lihat .ttd .nama-nip input:first-child { text-decoration: underline; }  /* ( nama ) bergaris bawah */
 
 
   /* ============================= HALAMAN / KERTAS ============================= */
@@ -85,24 +87,11 @@
 
   /* ---------- KOP ---------- */
   .kop { display: flex; align-items: center; gap: 14px; border-bottom: 3px double var(--garis); padding-bottom: 10px; }
-  .kop .logo {
-    flex: 0 0 auto;
-    width: 62px; height: 62px;
-    border: 1px dashed #b9b9b9;
-    border-radius: 6px;
-    display: flex; align-items: center; justify-content: center;
-    text-align: center;
-    font-size: 9px;
-    color: #b9b9b9;
-    line-height: 1.3;
-  }
+  .kop .logo { flex: 0 0 auto; width: 64px; height: auto; }
   .kop .teks { flex: 1 1 auto; text-align: center; }
   .kop .pemkot {
-    font-size: 15px; letter-spacing: 1px; margin: 0;
+    font-size: 18px; letter-spacing: 1px; margin: 0;
     font-weight: 700; text-transform: uppercase;
-  }
-  .kop .instansi {
-    font-size: 19px; margin: 2px 0 0; font-weight: 700; text-transform: uppercase;
   }
   .kop .alamat {
     font-size: 10.5px; margin: 3px 0 0; color: #333;
@@ -238,7 +227,10 @@
     text-align: right;
     font-size: 13px;
   }
+  .ttd .label-tempat, .ttd .label-ttd, .ttd .spasi { display: none; } /* tak tampil di formulir pengisian */
   .ttd .spasi { height: 8px; }
+  .ttd .nama-nip { display: none; }                       /* tak tampil di formulir pengisian */
+  body.mode-lihat .ttd .nama-nip { display: block; width: 240px; margin-left: auto; }  /* kolom sama dengan tempat */
   .ttd .nama-nip input {
     text-align: center;
     border: none;
@@ -295,7 +287,6 @@
     .page { margin: 0; padding: 0; box-shadow: none; max-width: none; }
     input, textarea.sel { padding: 1px 2px; }
     textarea.sel:focus { background: transparent; }
-    .kop .logo { border-color: #999; color: #999; }
     .bagian, .pernyataan, .ttd { page-break-inside: avoid; }
     table.tabel thead { display: table-header-group; }
   }
@@ -327,10 +318,9 @@
 
   <!-- KOP -->
   <header class="kop">
-    <div class="logo">LOGO<br>Instansi</div>
+    <img class="logo" src="assets/logo-aceh-tengah.png" alt="Lambang Kabupaten Aceh Tengah">
     <div class="teks">
       <p class="pemkot">Pemerintah Kabupaten Aceh Tengah</p>
-      <p class="instansi">Dinas Komunikasi dan Informatika</p>
       <p class="alamat">Alamat : ……………………………………… &nbsp;|&nbsp; Telepon : ……………… &nbsp;|&nbsp; E-mail : ………………</p>
     </div>
   </header>
@@ -529,7 +519,7 @@
     </div>
   </div>
 
-  <p class="footer-note">Formulir Daftar Kepentingan Pribadi — Dinas Komunikasi dan Informatika Kabupaten Aceh Tengah</p>
+  <p class="footer-note">Formulir Daftar Kepentingan Pribadi — Pemerintah Kabupaten Aceh Tengah</p>
 </div>
 
 <div id="toast"></div>
@@ -616,6 +606,7 @@
   function setupCanvas() {
     var cekWidth = canvas.parentElement.clientWidth;
     var width = (cekWidth && cekWidth > 100) ? cekWidth : 520;
+    width = Math.floor(width / 2);   // setengah lebar wadah (±344px di A4, fallback 260px)
     var height = 180;
     canvas.width = width * RASIO_CANVAS;
     canvas.height = height * RASIO_CANVAS;
@@ -835,8 +826,8 @@
       bagian_e:    JSON.stringify(e),
       bagian_f:    JSON.stringify(f),
       ttd:         (typeof punyaIsi !== 'undefined' && punyaIsi) ? canvas.toDataURL('image/png') : '',
-      ttd_nama:    flat.ttd_nama || '',
-      ttd_nip:     flat.ttd_nip || ''
+      ttd_nama:    flat.ttd_nama || flat.nama || '',
+      ttd_nip:     flat.ttd_nip || flat.nip || ''
     };
   }
 
@@ -1022,10 +1013,24 @@
       terapkanFlat(bangunFlatDariBaris(row));
       isiTempatTanggal(row);
 
+      // Nama & NIP di bawah tanda tangan: salin dari identitas bila kosong
+      // (kolom tsb tidak lagi ditampilkan pada formulir pengisian)
+      [['nama','ttd_nama'], ['nip','ttd_nip']].forEach(function (pas) {
+        var a = document.querySelector('input[data-key="' + pas[0] + '"]');
+        var b = document.querySelector('input[data-key="' + pas[1] + '"]');
+        if (a && b && !b.value.trim()) b.value = a.value.trim();
+      });
+
       // Tambahkan awalan "NIP. " bila belum ada (khusus tampilan lembar jadi)
       var nipEl = document.querySelector('input[data-key=\"ttd_nip\"]');
       if (nipEl && nipEl.value && !/^NIP\./i.test(nipEl.value.trim())) {
         nipEl.value = 'NIP. ' + nipEl.value;
+      }
+
+      // Nama tampil sebagai "( nama )" (khusus tampilan lembar jadi)
+      var namaEl = document.querySelector('input[data-key=\"ttd_nama\"]');
+      if (namaEl && namaEl.value.trim() && namaEl.value.trim().charAt(0) !== '(') {
+        namaEl.value = '( ' + namaEl.value.trim() + ' )';
       }
 
       // Tanda tangan dari database -> gambar ke kanvas, lalu pangkas ke area goresannya
