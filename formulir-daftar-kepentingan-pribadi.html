@@ -64,8 +64,7 @@
   body.mode-lihat canvas#ttdCanvas { pointer-events: none; cursor: default; }
   body.mode-lihat .ttd-tools, body.mode-lihat .ttd-pad-hint { display: none !important; }
   /* Blok tanda tangan mode lihat: tampil selayaknya lembar surat jadi */
-  body.mode-lihat .ttd .label-ttd { display: none; }              /* hilangkan "Ttd." */
-  body.mode-lihat .ttd .spasi { display: none; }
+  body.mode-lihat .ttd .label-tempat { display: block; }          /* tempat & tanggal hanya tampil di lembar jadi */
   body.mode-lihat .ttd-pad-wrap { text-align: right; }            /* ttd rata kanan, persis di atas nama */
   body.mode-lihat canvas#ttdCanvas {
     display: inline-block; vertical-align: bottom; margin: 0;
@@ -225,6 +224,7 @@
     text-align: right;
     font-size: 13px;
   }
+  .ttd .label-tempat, .ttd .label-ttd, .ttd .spasi { display: none; } /* tak tampil di formulir pengisian */
   .ttd .spasi { height: 8px; }
   .ttd .nama-nip input {
     text-align: center;
