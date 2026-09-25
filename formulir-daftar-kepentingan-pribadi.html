@@ -226,6 +226,8 @@
   }
   .ttd .label-tempat, .ttd .label-ttd, .ttd .spasi { display: none; } /* tak tampil di formulir pengisian */
   .ttd .spasi { height: 8px; }
+  .ttd .nama-nip { display: none; }                       /* tak tampil di formulir pengisian */
+  body.mode-lihat .ttd .nama-nip { display: block; }      /* tetap tampil di lembar jadi */
   .ttd .nama-nip input {
     text-align: center;
     border: none;
@@ -820,8 +822,8 @@
       bagian_e:    JSON.stringify(e),
       bagian_f:    JSON.stringify(f),
       ttd:         (typeof punyaIsi !== 'undefined' && punyaIsi) ? canvas.toDataURL('image/png') : '',
-      ttd_nama:    flat.ttd_nama || '',
-      ttd_nip:     flat.ttd_nip || ''
+      ttd_nama:    flat.ttd_nama || flat.nama || '',
+      ttd_nip:     flat.ttd_nip || flat.nip || ''
     };
   }
 
@@ -1006,6 +1008,14 @@
 
       terapkanFlat(bangunFlatDariBaris(row));
       isiTempatTanggal(row);
+
+      // Nama & NIP di bawah tanda tangan: salin dari identitas bila kosong
+      // (kolom tsb tidak lagi ditampilkan pada formulir pengisian)
+      [['nama','ttd_nama'], ['nip','ttd_nip']].forEach(function (pas) {
+        var a = document.querySelector('input[data-key="' + pas[0] + '"]');
+        var b = document.querySelector('input[data-key="' + pas[1] + '"]');
+        if (a && b && !b.value.trim()) b.value = a.value.trim();
+      });
 
       // Tambahkan awalan "NIP. " bila belum ada (khusus tampilan lembar jadi)
       var nipEl = document.querySelector('input[data-key=\"ttd_nip\"]');
