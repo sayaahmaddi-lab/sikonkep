@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="SiKonKep — Formulir Daftar Kepentingan Pribadi digital. Dinas Komunikasi dan Informatika Kabupaten Aceh Tengah.">
 <title>SiKonKep — Formulir Daftar Kepentingan Pribadi | Diskominfo Aceh Tengah</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%231b2733'/%3E%3Cpath d='M32 12l14 5v12c0 10-6 17-14 21-8-4-14-11-14-21V17z' fill='%23ff9800'/%3E%3Cpath d='M25 31l5 5 10-11' stroke='%23fff' stroke-width='4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%231b2733'/%3E%3Cpath d='M32 12l14 5v12c0 10-6 17-14 21-8-4-14-11-14-21V17z' fill='%2327ae60'/%3E%3Cpath d='M25 31l5 5 10-11' stroke='%23fff' stroke-width='4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <style>
   :root{
-    --aksen:#e6400c;          /* oranye utama (tema referensi) */
-    --aksen2:#ff9800;         /* oranye terang hover/steps     */
+    --aksen:#1c7c3c;          /* hijau utama brand Kominfo     */
+    --aksen2:#27ae60;         /* hijau terang hover/steps      */
     --hijau:#4d7b4e;          /* hijau aksen pre-header        */
     --navy:#1b2733;           /* biru gelap footer/CTA         */
     --biru:#0f2438;
@@ -81,7 +81,7 @@
     nav.utama.buka{display:block}
     nav.utama ul{flex-direction:column;padding:8px 4%}
     nav.utama a{border-bottom:none;border-left:3px solid transparent;padding:11px 10px}
-    nav.utama a.aktif,nav.utama a:hover{border-left-color:var(--aksen2);background:#faf6f2}
+    nav.utama a.aktif,nav.utama a:hover{border-left-color:var(--aksen2);background:#f0f8f2}
   }
 
   /* ============ HERO SLIDER ============ */
@@ -138,7 +138,7 @@
   .kartu:hover{transform:translateY(-5px);box-shadow:0 14px 30px rgba(20,30,40,.12)}
   .kartu .ikon{
     width:66px;height:66px;margin:0 auto 18px;border-radius:50%;
-    background:#fdf0e6;border:2px solid var(--aksen2);
+    background:#eaf6ee;border:2px solid var(--aksen2);
     display:flex;align-items:center;justify-content:center;
   }
   .kartu .ikon svg{width:30px;height:30px;fill:var(--aksen)}
@@ -163,7 +163,7 @@
     font-size:24px;font-weight:800;
   }
   .langkah h3{font-size:19px;font-weight:700;margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px}
-  .langkah p{font-size:13px;color:#fff3df}
+  .langkah p{font-size:13px;color:#e9f7ee}
   @media(max-width:860px){
     .langkah .grid{grid-template-columns:1fr;gap:26px}
     .langkah .kolom,.langkah .kolom + .kolom{padding:0}
@@ -188,7 +188,7 @@
     height:120px;display:flex;align-items:center;justify-content:center;
     background:linear-gradient(135deg,var(--biru),#2a4e73);
   }
-  .info-kartu:nth-child(2) .sampul{background:linear-gradient(135deg,#7a3c00,var(--aksen2))}
+  .info-kartu:nth-child(2) .sampul{background:linear-gradient(135deg,#0e5a2a,var(--aksen2))}
   .info-kartu:nth-child(3) .sampul{background:linear-gradient(135deg,#274d28,var(--hijau))}
   .info-kartu .sampul svg{width:46px;height:46px;fill:#fff;opacity:.92}
   .info-kartu .isi{padding:22px 22px 24px;display:flex;flex-direction:column;flex:1}
@@ -197,6 +197,33 @@
   .info-kartu .tautan{margin-top:16px;font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px}
   .info-kartu .tautan::after{content:" →"}
   @media(max-width:860px){.info-grid{grid-template-columns:1fr}}
+
+  /* ============ BERITA & INFORMASI ============ */
+  .berita{background:#fff;padding:64px 0;border-top:1px solid var(--garis)}
+  .berita .kepala{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:34px}
+  .berita .kepala .judul-seksi{text-align:left;margin-bottom:0}
+  .berita .kepala .judul-seksi p{margin:0}
+  .berita .kepala .garis-judul{margin:0 0 12px}
+  .berita .geser{display:flex;gap:8px;flex:none}
+  .berita .geser button{
+    width:34px;height:34px;border-radius:50%;border:1px solid var(--garis);
+    background:#fff;color:var(--biru);cursor:pointer;font-size:15px;transition:all .2s;
+  }
+  .berita .geser button:hover{background:var(--aksen2);border-color:var(--aksen2);color:#fff}
+  .berita .track{
+    display:flex;gap:24px;overflow-x:auto;scroll-snap-type:x mandatory;
+    padding-bottom:8px;scrollbar-width:thin;
+  }
+  .berita article{
+    flex:0 0 min(340px,86vw);scroll-snap-align:start;background:#fff;
+    border:1px solid var(--garis);transition:transform .2s,box-shadow .2s;
+  }
+  .berita article:hover{transform:translateY(-4px);box-shadow:0 12px 26px rgba(20,30,40,.10)}
+  .berita article img{height:180px;width:100%;object-fit:cover}
+  .berita .isi{padding:18px 20px 22px}
+  .berita .tgl{font-size:11.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--aksen);font-weight:700}
+  .berita h3{font-size:15.5px;color:var(--biru);margin:8px 0;font-weight:700;line-height:1.45}
+  .berita p{font-size:13px;color:#77828d}
 
   /* ============ TAUTAN TERKAIT ============ */
   .mitra{background:#fff;padding:56px 0;border-top:1px solid var(--garis)}
@@ -262,7 +289,7 @@
     <a class="logo" href="#beranda" aria-label="Beranda SiKonKep">
       <svg class="marka" viewBox="0 0 64 64" aria-hidden="true">
         <circle cx="32" cy="32" r="30" fill="#1b2733"/>
-        <path d="M32 12l14 5v12c0 10-6 17-14 21-8-4-14-11-14-21V17z" fill="#ff9800"/>
+        <path d="M32 12l14 5v12c0 10-6 17-14 21-8-4-14-11-14-21V17z" fill="#27ae60"/>
         <path d="M25 31l5 5 10-11" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
       <span class="nama"><b>SiKonKep</b><small>Formulir Daftar Kepentingan Pribadi</small></span>
@@ -273,6 +300,7 @@
         <li><a href="#beranda" class="aktif">Beranda</a></li>
         <li><a href="#fitur">Fitur</a></li>
         <li><a href="#alur">Alur</a></li>
+        <li><a href="#berita">Berita</a></li>
         <li><a href="#panduan">Panduan</a></li>
         <li><a href="formulir-daftar-kepentingan-pribadi.html">Isi Formulir</a></li>
       </ul>
@@ -383,6 +411,49 @@
       <p>Pengisian hanya membutuhkan beberapa menit. Isian Anda membantu pencegahan konflik kepentingan di lingkungan Pemerintah Kabupaten Aceh Tengah.</p>
     </div>
     <a class="tombol" href="formulir-daftar-kepentingan-pribadi.html">Isi Formulir</a>
+  </div>
+</section>
+
+<!-- ===== BERITA & INFORMASI ===== -->
+<section class="berita" id="berita">
+  <div class="container">
+    <div class="kepala">
+      <div class="judul-seksi">
+        <h2>Berita &amp; Informasi</h2>
+        <div class="garis-judul"></div>
+        <p>Kabar terbaru seputar penggunaan SiKonKep di lingkungan Pemkab Aceh Tengah.</p>
+      </div>
+      <div class="geser">
+        <button id="brKiri" aria-label="Geser ke kiri">&#10094;</button>
+        <button id="brKanan" aria-label="Geser ke kanan">&#10095;</button>
+      </div>
+    </div>
+    <div class="track" id="brTrack">
+      <article>
+        <img src="assets/berita-sosialisasi.jpg" alt="Suasana sosialisasi pengisian formulir">
+        <div class="isi">
+          <span class="tgl">September 2026 &middot; Sosialisasi</span>
+          <h3>Sosialisasi Pengisian Formulir Daftar Kepentingan Pribadi</h3>
+          <p>Seluruh pegawai dihimbau mengisi formulir secara digital melalui SiKonKep sebagai upaya pencegahan konflik kepentingan sejak dini.</p>
+        </div>
+      </article>
+      <article>
+        <img src="assets/berita-pembaruan.jpg" alt="Tampilan aplikasi SiKonKep di komputer">
+        <div class="isi">
+          <span class="tgl">Agustus 2026 &middot; Pembaruan</span>
+          <h3>SiKonKep v1.1: Lembar Lihat Admin Persis Formulir Asli</h3>
+          <p>Rilis terbaru memperbaiki penyimpanan ke Neon dan menampilkan lembar isian di halaman admin lengkap dengan tanda tangan, siap cetak/PDF.</p>
+        </div>
+      </article>
+      <article>
+        <img src="assets/berita-ttd.jpg" alt="Tanda tangan digital pada layar sentuh">
+        <div class="isi">
+          <span class="tgl">Juli 2026 &middot; Fitur</span>
+          <h3>Tanda Tangan Digital Kini Mendukung Layar Sentuh</h3>
+          <p>Isian dan tanda tangan tersimpan otomatis di peramban, sehingga tidak hilang meski halaman ditutup sebelum dikirim.</p>
+        </div>
+      </article>
+    </div>
   </div>
 </section>
 
@@ -535,8 +606,17 @@
   hero.addEventListener("mouseleave", restart);
   restart();
 
+  /* ---------- Geser berita ---------- */
+  var track = document.getElementById("brTrack");
+  function lebarKartu(){
+    var k = track.querySelector("article");
+    return k ? k.getBoundingClientRect().width + 24 : 364;
+  }
+  document.getElementById("brKiri").addEventListener("click", function(){ track.scrollBy({left:-lebarKartu(), behavior:"smooth"}); });
+  document.getElementById("brKanan").addEventListener("click", function(){ track.scrollBy({left:lebarKartu(), behavior:"smooth"}); });
+
   /* ---------- Scrollspy nav ---------- */
-  var seksi = ["beranda","fitur","alur","panduan"].map(function(id){ return document.getElementById(id); });
+  var seksi = ["beranda","fitur","alur","berita","panduan"].map(function(id){ return document.getElementById(id); });
   var tautanNav = Array.prototype.slice.call(nav.querySelectorAll('a[href^="#"]'));
   function spy(){
     var y = window.scrollY + 130, aktifId = "beranda";

@@ -20,7 +20,6 @@ Konflik Kepentingan) secara digital, lengkap dengan **tanda tangan digital**
 
 | Berkas | Fungsi |
 |---|---|
-| `index.html` | Landing page publik (gaya situs WBS: slider, fitur, alur, panduan, tautan terkait) |
 | `formulir-daftar-kepentingan-pribadi.html` | Halaman formulir untuk pegawai (otomatis pilih endpoint lokal/online) |
 | `login.html` | Login admin online (Vercel + Neon) — JWT |
 | `admin.html` | Dashboard admin online (list, detail, ubah status, export CSV) |
