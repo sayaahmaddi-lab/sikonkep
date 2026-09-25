@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="SiKonKep — Formulir Daftar Kepentingan Pribadi digital. Dinas Komunikasi dan Informatika Kabupaten Aceh Tengah.">
 <title>SiKonKep — Formulir Daftar Kepentingan Pribadi | Diskominfo Aceh Tengah</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%231b2733'/%3E%3Cpath d='M32 12l14 5v12c0 10-6 17-14 21-8-4-14-11-14-21V17z' fill='%2327ae60'/%3E%3Cpath d='M25 31l5 5 10-11' stroke='%23fff' stroke-width='4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="icon" type="image/png" href="assets/logo-aceh-tengah.png">
 <style>
   :root{
     --aksen:#1c7c3c;          /* hijau utama brand Kominfo     */
@@ -56,7 +56,7 @@
   header.situs.tergulir{box-shadow:0 3px 14px rgba(20,30,40,.12)}
   header.situs .container{display:flex;align-items:center;gap:24px;padding:14px 0}
   .logo{display:flex;align-items:center;gap:12px;margin-right:auto}
-  .logo .marka{width:46px;height:46px;flex:none}
+  .logo .marka{height:48px;width:auto;flex:none}
   .logo .nama{line-height:1.15}
   .logo .nama b{display:block;font-size:21px;color:var(--biru);letter-spacing:.3px}
   .logo .nama small{display:block;font-size:11px;color:#7c8894;letter-spacing:.2px}
@@ -287,11 +287,7 @@
 <header class="situs" id="atas">
   <div class="container">
     <a class="logo" href="#beranda" aria-label="Beranda SiKonKep">
-      <svg class="marka" viewBox="0 0 64 64" aria-hidden="true">
-        <circle cx="32" cy="32" r="30" fill="#1b2733"/>
-        <path d="M32 12l14 5v12c0 10-6 17-14 21-8-4-14-11-14-21V17z" fill="#27ae60"/>
-        <path d="M25 31l5 5 10-11" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+      <img class="marka" src="assets/logo-aceh-tengah.png" alt="Lambang Kabupaten Aceh Tengah">
       <span class="nama"><b>SiKonKep</b><small>Formulir Daftar Kepentingan Pribadi</small></span>
     </a>
     <button class="toggler" id="toggler" aria-label="Buka menu" aria-expanded="false"><span></span><span></span><span></span></button>
