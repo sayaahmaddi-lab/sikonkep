@@ -606,6 +606,7 @@
   function setupCanvas() {
     var cekWidth = canvas.parentElement.clientWidth;
     var width = (cekWidth && cekWidth > 100) ? cekWidth : 520;
+    width = Math.floor(width / 2);   // setengah lebar wadah (±344px di A4, fallback 260px)
     var height = 180;
     canvas.width = width * RASIO_CANVAS;
     canvas.height = height * RASIO_CANVAS;
